@@ -1,8 +1,28 @@
 package abb;
 
+import java.util.Comparator;
+
 public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
     private NodoABB raiz;
 
+    private Comparator<T> comparador;
+
+
+
+    public ABB() {
+        this.comparador = null;
+    }
+
+    public ABB(Comparator<T> comparador) {
+        this.comparador = comparador;
+    }
+
+    private int comparar(T a, T b) {
+        if (comparador != null)
+            return comparador.compare(a, b);
+        else
+            return ((Comparable<T>) a).compareTo(b);
+    }
 
     //innerclass
 
@@ -63,9 +83,10 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
     private T buscarRec(NodoABB nodo, T dato) {
         if (nodo == null) return null;
 
-        int cmp = dato.compareTo(nodo.dato);
-
+        int cmp = comparar(dato, nodo.dato); //Cambie int cmp = dato.compareTo(nodo.dato)
+                                            // porque el compareTo siempre iba a comparar por cedula
         if (cmp == 0) return nodo.dato;
+
         if (cmp < 0) return buscarRec(nodo.izq, dato);
         return buscarRec(nodo.der, dato);
     }

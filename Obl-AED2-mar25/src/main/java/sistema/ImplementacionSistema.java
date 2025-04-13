@@ -40,7 +40,8 @@ public class ImplementacionSistema implements Sistema  {
 
         // Inicialización de las estructuras requeridas
         viajerosPorCedula = new ABB<>();
-        viajerosPorCorreo = new ABB<>();
+        viajerosPorCorreo = new ABB<>(Viajero.comparadorPorCorreo);
+
 
         // Devolver retorno exitoso
         return Retorno.ok();

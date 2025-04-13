@@ -56,6 +56,20 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         else return perteneceRec(actual.der, valor);
     }
 
+    public T buscar(T dato) {
+        return buscarRec(raiz, dato);
+    }
+
+    private T buscarRec(NodoABB nodo, T dato) {
+        if (nodo == null) return null;
+
+        int cmp = dato.compareTo(nodo.dato);
+
+        if (cmp == 0) return nodo.dato;
+        if (cmp < 0) return buscarRec(nodo.izq, dato);
+        return buscarRec(nodo.der, dato);
+    }
+
     public int altura() {
         return altura(raiz);
     }

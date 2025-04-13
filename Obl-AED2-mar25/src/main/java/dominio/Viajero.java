@@ -1,6 +1,7 @@
 package dominio;
 import interfaz.Categoria;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Viajero implements Comparable<Viajero>
@@ -71,6 +72,8 @@ public class Viajero implements Comparable<Viajero>
         return this.getCedula().compareTo(o.getCedula());
     }
 
+
+
     @Override
     //Creacion del equals para realizar comparacion mediante metodo existeElemento de ListaSimple
     public boolean equals(Object obj)
@@ -101,6 +104,15 @@ public class Viajero implements Comparable<Viajero>
                 ", Edad: " + edad +
                 ", Categoria: " + categoria; // Se muestra el texto de forma legible
     }
+
+
+    public static Comparator<Viajero> comparadorPorCorreo = new Comparator<Viajero>() {
+        @Override
+        public int compare(Viajero v1, Viajero v2) {
+            return v1.getCorreo().compareTo(v2.getCorreo());
+        }
+    };
+
 
 
 

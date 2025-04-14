@@ -64,7 +64,7 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         return nodo;
     }
 
-    public boolean pertenece(T x) {
+    public boolean pertenece(T x) { // te devuelve true o false
         return perteneceRec(raiz, x);
     }
 
@@ -76,7 +76,7 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         else return perteneceRec(actual.der, valor);
     }
 
-    public T buscar(T dato) {
+    public T buscar(T dato) { // te da el dato
         return buscarRec(raiz, dato);
     }
 
@@ -90,6 +90,23 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         if (cmp < 0) return buscarRec(nodo.izq, dato);
         return buscarRec(nodo.der, dato);
     }
+
+    public ResultadoBusqueda<T> buscarConComparaciones(T dato) {
+        return buscarConComparaciones(raiz, dato, 0);
+    }
+
+
+    private ResultadoBusqueda<T> buscarConComparaciones(NodoABB nodo, T dato, int contador) {
+        if (nodo == null) return new ResultadoBusqueda<>(null, contador);
+
+        int cmp = comparar(dato, nodo.dato);
+        contador++; // contamos la comparación hecha
+
+        if (cmp == 0) return new ResultadoBusqueda<>(nodo.dato, contador);
+        if (cmp < 0) return buscarConComparaciones(nodo.izq, dato, contador);
+        return buscarConComparaciones(nodo.der, dato, contador);
+    }
+
 
     public int altura() {
         return altura(raiz);

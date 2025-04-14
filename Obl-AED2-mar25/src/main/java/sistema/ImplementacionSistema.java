@@ -1,5 +1,6 @@
 package sistema;
 import abb.ABB;
+import abb.ResultadoBusqueda;
 import dominio.Ciudad;
 import dominio.Viajero;
 import interfaz.*;
@@ -68,7 +69,7 @@ public class ImplementacionSistema implements Sistema  {
     public Retorno registrarViajero(String cedula, String nombre, String correo, int edad, Categoria categoria) {
 
         //Creamos el viajero para buscar en el ABB
-        Viajero viajeroBuscado = new Viajero(cedula, nombre, correo, edad, categoria);
+        Viajero viajeroNuevo = new Viajero(cedula, nombre, correo, edad, categoria);
 
 
         if (    cedula == null || cedula.isEmpty() || nombre == null ||
@@ -91,30 +92,83 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error4("edad no está en el rango válido [0 ~ 139] límites incluidos.");
         }
 
-        if (viajerosPorCedula.buscar(viajeroBuscado) !=  null){
+        if (viajerosPorCedula.buscar(viajeroNuevo) !=  null){
 
             return Retorno.error5("Ya existe un viajero registrado con esa cedula");
         }
 
-        if (viajerosPorCorreo.buscar(viajeroBuscado) != null){
+        if (viajerosPorCorreo.buscar(viajeroNuevo) != null){
 
             return Retorno.error6("Ya existe un viajero registrado con ese email");
         }
 
-        Viajero nuevo = new Viajero(cedula, nombre, correo, edad, categoria);
 
-        viajerosPorCorreo.insertar(nuevo);
-        viajerosPorCedula.insertar(nuevo);
+
+        viajerosPorCorreo.insertar(viajeroNuevo);
+        viajerosPorCedula.insertar(viajeroNuevo);
 
         return Retorno.ok();
     }
 
     //-------------------------------------------------------------------------------------------------
 
+    /*
+
+    03.- Buscar Viajero por cédula
+    Retorno buscarViajeroPorCedula(String cedula);
+    Descripción: Retorna en valorString los datos del viajero con el formato
+    “cedula;nombre;correo;edad;categoria”. Además, en el campo valorEntero del objeto retorno deberá
+    devolver la cantidad de elementos que recorrió durante la búsqueda en la estructura utilizada.
+    Restricción de eficiencia: Esta operación deberá realizarse en orden O(log n) promedio, siendo n la
+    cantidad total de viajeros.
+    Retornos posibles
+    OK
+    ERROR
+    Si el viajero se encontró.
+    Retorna en valorString los datos del viajero.
+    Retorna en valorEntero la cantidad de elementos recorridos durante la búsqueda.
+    1. Si la cédula es vacía o null.
+    2. Si la cédula no tiene formato válido.
+    3. Si no existe un viajero registrado con esa cédula.
+    NO_IMPLEMENTADA Cuando aún no se implementó.
+    Formato de retorno del valorString: cedula;nombre;correo;edad;categoría.
+    Por ejemplo, valorString del retorno en una consulta válida:
+    1.914.689-5;Guillermo;guille@ort.edu.uy,35,Estándar
+         */
+
     @Override
     public Retorno buscarViajeroPorCedula(String cedula) {
-        return Retorno.noImplementada();
+        // Validaciones iniciales
+        if (cedula == null || cedula.isEmpty()) {
+            return Retorno.error1("La cédula no puede estar vacía");
+        }
+
+        if (!cedula.matches("^(\\d{1,2}\\.\\d{3}\\.\\d{3}-\\d)$")) {
+            return Retorno.error2("Cédula no tiene un formato válido");
+        }
+
+        // Creamos un viajero ficticio para comparar (solo se usa la cédula en el compareTo)
+        Viajero buscado = new Viajero(cedula, "", "", 0, Categoria.ESTANDAR);
+
+        // Usamos el ABB para buscar devolviendo también el contador de comparaciones
+        ResultadoBusqueda<Viajero> resultado = viajerosPorCedula.buscarConComparaciones(buscado);
+
+        if (resultado.getDato() == null) {
+            return Retorno.error3("El viajero no está registrado");
+        }
+
+        // Construimos el string de retorno
+        Viajero encontrado = resultado.getDato();
+        String datos = encontrado.getCedula() + ";" +
+                encontrado.getNombre() + ";" +
+                encontrado.getCorreo() + ";" +
+                encontrado.getEdad() + ";" +
+                encontrado.getCategoria().toString();
+
+        // Devolvemos OK con comparaciones realizadas y el string
+        return Retorno.ok(resultado.getComparaciones(), datos);
     }
+
 
     @Override
     public Retorno buscarViajeroPorCorreo(String correo) {

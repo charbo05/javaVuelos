@@ -95,6 +95,10 @@ public class Viajero implements Comparable<Viajero>
             return true;//si tienen igual cedula
         }
     }
+    /*   Formato de retorno del valorString: cedula;nombre;correo;edad;categoría.
+    Por ejemplo, valorString del retorno en una consulta válida:
+    1.914.689-5;Guillermo;guille@ort.edu.uy,35,Estándar
+    */
 
     @Override
     public String toString() {

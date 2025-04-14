@@ -10,5 +10,5 @@ public interface IArbolBusqueda <T extends Comparable <T>> {
     void listarDescendente();
     T borrarMinimo();
     T buscar(T dato);
-
+    ResultadoBusqueda<T> buscarConComparaciones(T dato);
 }

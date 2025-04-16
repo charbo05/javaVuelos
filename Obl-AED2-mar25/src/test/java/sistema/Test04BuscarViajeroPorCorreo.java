@@ -1,4 +1,3 @@
-
 package sistema;
 
 import interfaz.Categoria;
@@ -8,9 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class Test03BuscarViajero {
+public class Test04BuscarViajeroPorCorreo {
+
     private Retorno retorno;
     private final Sistema s = new ImplementacionSistema();
 
@@ -22,7 +21,7 @@ public class Test03BuscarViajero {
     @Test
     void buscarViajeroOk() {
         s.registrarViajero("1.914.689-5", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
-        retorno = s.buscarViajeroPorCedula("1.914.689-5");
+        retorno = s.buscarViajeroPorCorreo("guille@ort.edu.uy");
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
 
@@ -38,7 +37,7 @@ public class Test03BuscarViajero {
         s.registrarViajero("2.000.000-0", "Carlos", "carlos@ort.edu.uy", 40, Categoria.PLATINO);
         s.registrarViajero("1.000.000-0", "Ana", "ana@ort.edu.uy", 30, Categoria.ESTANDAR);
 
-        Retorno retorno = s.buscarViajeroPorCedula("1.000.000-0");
+        Retorno retorno = s.buscarViajeroPorCorreo("ana@ort.edu.uy");
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
         assertEquals(2, retorno.getValorInteger());
@@ -51,7 +50,8 @@ public class Test03BuscarViajero {
         s.registrarViajero("3.000.000-0", "Beto", "beto@ort.edu.uy", 25, Categoria.ESTANDAR);
         s.registrarViajero("2.500.000-0", "Dana", "dana@ort.edu.uy", 28, Categoria.FRECUENTE);
 
-        Retorno retorno = s.buscarViajeroPorCedula("2.500.000-0");
+
+        Retorno retorno = s.buscarViajeroPorCorreo("dana@ort.edu.uy");
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
         assertEquals(3, retorno.getValorInteger());
@@ -62,12 +62,12 @@ public class Test03BuscarViajero {
 
 
     @Test
-    void buscarViajeroCorreoVacioError1() {
+    void buscarViajeroCedulaVaciaError1() {
         // No es necesario registrar un viajero para este test
-        Retorno retorno = s.buscarViajeroPorCorreo("");
+        Retorno retorno = s.buscarViajeroPorCedula("");
         assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
 
-         retorno = s.buscarViajeroPorCorreo(null);
+        retorno = s.buscarViajeroPorCedula(null);
         assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
 
     }
@@ -75,23 +75,23 @@ public class Test03BuscarViajero {
     //-------------------------------------------------------------
 
     @Test
-    void buscarViajeroCorreoFormatoInvalidoError2() {
+    void buscarViajeroCedulaFormatoInvalidoError2() {
         // No es necesario registrar un viajero para este test
-        Retorno retorno = s.buscarViajeroPorCorreo("pepe.com");
+        Retorno retorno = s.buscarViajeroPorCedula("12545698");
         assertEquals(Retorno.Resultado.ERROR_2, retorno.getResultado());
 
-        retorno = s.buscarViajeroPorCorreo("pepito@pepito");
+        retorno = s.buscarViajeroPorCedula("12325-1");
         assertEquals(Retorno.Resultado.ERROR_2, retorno.getResultado());
 
     }
 
     @Test
     void buscarViajeroNoRegistradoError3() {
-        // Correo correcta pero no registrada
-        Retorno retorno = s.buscarViajeroPorCorreo("pepe@pepe.com");
+        // Cedula correcta pero no registrada
+        Retorno retorno = s.buscarViajeroPorCedula("1.236.365-8");
         assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());
 
-        retorno = s.buscarViajeroPorCorreo("diego@armando.com");
+        retorno = s.buscarViajeroPorCedula("1.234.567-1");
         assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());
 
     }

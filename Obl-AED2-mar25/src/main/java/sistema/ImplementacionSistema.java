@@ -172,7 +172,36 @@ public class ImplementacionSistema implements Sistema  {
 
     @Override
     public Retorno buscarViajeroPorCorreo(String correo) {
-        return Retorno.noImplementada();
+
+        // Validaciones iniciales
+        if (correo == null || correo.isEmpty()) {
+            return Retorno.error1("El correo no puede estar vacía");
+        }
+
+        if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")) {
+            return Retorno.error2("Correo no tiene un formato válido");
+        }
+
+        // Creamos un viajero ficticio para comparar (solo se usa el correo en el compareTo)
+        Viajero buscado = new Viajero("", "", correo, 0, Categoria.ESTANDAR);
+
+        // Usamos el ABB para buscar devolviendo también el contador de comparaciones
+        ResultadoBusqueda<Viajero> resultado = viajerosPorCorreo.buscarConComparaciones(buscado);
+
+        if (resultado.getDato() == null) {
+            return Retorno.error3("El viajero no está registrado");
+        }
+
+        // Construimos el string de retorno
+        Viajero encontrado = resultado.getDato();
+        String datos = encontrado.getCedula() + ";" +
+                encontrado.getNombre() + ";" +
+                encontrado.getCorreo() + ";" +
+                encontrado.getEdad() + ";" +
+                encontrado.getCategoria().toString();
+
+        // Devolvemos OK con comparaciones realizadas y el string
+        return Retorno.ok(resultado.getComparaciones(), datos);
     }
 
     @Override

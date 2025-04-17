@@ -1,4 +1,6 @@
-package abb;
+package tadsAux;
+
+import dominio.Viajero;
 
 import java.util.Comparator;
 
@@ -33,6 +35,18 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
 
         public NodoABB(T dato) {
             this.dato = dato;
+        }
+
+        public T getDato() {
+            return dato;
+        }
+
+        public NodoABB getIzq() {
+            return izq;
+        }
+
+        public NodoABB getDer() {
+            return der;
         }
 
         @Override
@@ -128,32 +142,50 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
                 equilibrado(nodo.der);
     }
 
-    public void listarAscendente() {
-        imprimirInorden(raiz);
-        System.out.println();
+
+    public String listarAscendente() {
+        StringBuilder sb = new StringBuilder();
+        listarAscendente(this.raiz, sb);
+        return sb.toString();
     }
 
-    private void imprimirInorden(NodoABB nodo) {
+    private void listarAscendente(NodoABB nodo, StringBuilder sb) {
         if (nodo != null) {
-            imprimirInorden(nodo.izq);
-            System.out.print(nodo.dato + " ");
-            imprimirInorden(nodo.der);
+            listarAscendente(nodo.izq, sb);
+            if (sb.length() > 0) sb.append("|");
+            sb.append(nodo.dato.toString());
+            listarAscendente(nodo.der, sb);
         }
     }
 
-    public void listarDescendente() {
-        imprimirDesc(raiz);
-        System.out.println();
+
+    public String listarDescendente() {
+        StringBuilder sb = new StringBuilder();
+        imprimirDesc(this.raiz, sb);
+        return sb.toString();
     }
 
-    private void imprimirDesc(NodoABB nodo) {
+    private void imprimirDesc(NodoABB nodo, StringBuilder sb) {
         if (nodo != null) {
-            imprimirDesc(nodo.der);
-            System.out.print(nodo.dato + " ");
-            imprimirDesc(nodo.izq);
+            imprimirDesc(nodo.der, sb);
+            if(sb.length()>0) sb.append("|");
+            sb.append(nodo.dato.toString());
+            imprimirDesc(nodo.izq, sb);
         }
     }
 
+  /*  public String listarAscendente(NodoABB nodo, boolean esPrimero, String cadena){
+
+        if(nodo != null){
+
+            Viajero viajero = (Viajero) nodo.getDato();
+
+            if(!esPrimero){
+                cadena =
+            }
+        }
+    }
+*/
     public T borrarMinimo() {
         if (raiz == null) throw new RuntimeException("Árbol vacío");
         if (raiz.izq == null) {
@@ -173,7 +205,9 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         return borrarMinimo(nodo.izq);
     }
 
-
+public boolean esVacia(){
+        return raiz==null;
+}
 
     @Override
     public String toString() {

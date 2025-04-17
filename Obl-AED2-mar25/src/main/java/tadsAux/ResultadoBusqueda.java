@@ -1,4 +1,4 @@
-package abb;
+package tadsAux;
 
 public class ResultadoBusqueda<T> {
     private final T dato;

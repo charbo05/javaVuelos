@@ -1,4 +1,4 @@
-package abb;
+package tadsAux;
 
 public interface IArbolBusqueda <T extends Comparable <T>> {
 
@@ -6,9 +6,10 @@ public interface IArbolBusqueda <T extends Comparable <T>> {
     boolean pertenece(T dato);
     int altura();
     boolean equilibrado();
-    void listarAscendente();
-    void listarDescendente();
+    String listarAscendente();
+    String listarDescendente();
     T borrarMinimo();
     T buscar(T dato);
     ResultadoBusqueda<T> buscarConComparaciones(T dato);
+    boolean esVacia();
 }

@@ -1,6 +1,6 @@
 package sistema;
-import abb.ABB;
-import abb.ResultadoBusqueda;
+import tadsAux.ABB;
+import tadsAux.ResultadoBusqueda;
 import dominio.Ciudad;
 import dominio.Viajero;
 import interfaz.*;
@@ -169,6 +169,8 @@ public class ImplementacionSistema implements Sistema  {
         return Retorno.ok(resultado.getComparaciones(), datos);
     }
 
+    //------------------------------------------------------------------------------------------
+
 
     @Override
     public Retorno buscarViajeroPorCorreo(String correo) {
@@ -204,16 +206,34 @@ public class ImplementacionSistema implements Sistema  {
         return Retorno.ok(resultado.getComparaciones(), datos);
     }
 
+//---------------------------------------------------------------------------------
+
     @Override
     public Retorno listarViajerosPorCedulaAscendente() {
-        return Retorno.noImplementada();
+        if (viajerosPorCedula.esVacia()) {
+            return Retorno.ok(""); // OK, pero sin contenido
+        }
+
+        String resultado = viajerosPorCedula.listarAscendente(); // este debe devolver el String concatenado
+        return Retorno.ok(resultado);
     }
+
+//----------------------------------------------------------------------------------------
+
 
     @Override
     public Retorno listarViajerosPorCedulaDescendente() {
-        return Retorno.noImplementada();
+
+        if (viajerosPorCedula.esVacia()) {
+            return Retorno.ok(""); // OK, pero sin contenido
+        }
+
+        String resultado = viajerosPorCedula.listarDescendente(); // este debe devolver el String concatenado
+        return Retorno.ok(resultado);
     }
 
+
+    //------------------------------------------------------------------------------------------------
     @Override
     public Retorno listarViajerosPorCorreoAscendente() {
         return Retorno.noImplementada();

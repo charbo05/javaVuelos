@@ -100,7 +100,7 @@ public class Viajero implements Comparable<Viajero>
     1.914.689-5;Guillermo;guille@ort.edu.uy,35,Estándar
     */
 
-    @Override
+  /*  @Override
     public String toString() {
         return "Cedula: " + cedula +
                 ", Nombre: " + nombre +
@@ -108,6 +108,13 @@ public class Viajero implements Comparable<Viajero>
                 ", Edad: " + edad +
                 ", Categoria: " + categoria; // Se muestra el texto de forma legible
     }
+*/
+    // en Viajero.java
+    @Override
+    public String toString() {
+        return cedula + ";" + nombre + ";" + correo + ";" + edad + ";" + categoria.toString().charAt(0) + categoria.toString().substring(1).toLowerCase();
+    }
+
 
 
     public static Comparator<Viajero> comparadorPorCorreo = new Comparator<Viajero>() {

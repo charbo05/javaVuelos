@@ -18,6 +18,22 @@ public class Test05ListarViajeroPorCedulaAscendente {
         s.inicializarSistema(10);
     }
 
+
+    //Controlo que si la lista esta vacia que no  te explote
+    @Test
+    void listarViajeroVaciaOk() {
+
+        retorno = s.listarViajerosPorCedulaAscendente();
+
+        assertEquals(Retorno.Resultado.OK, retorno.getResultado());
+
+        // assertEquals(1, retorno.getValorInteger());
+
+        assertEquals("", retorno.getValorString());
+
+
+
+    }
     @Test
     void listarViajeroOk() {
         s.registrarViajero("1.914.689-5", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
@@ -47,7 +63,7 @@ public class Test05ListarViajeroPorCedulaAscendente {
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
 
-        // assertEquals(1, retorno.getValorInteger());
+
 
         assertEquals("1.914.689-5;Guillermo;guille3@ort.edu.uy;35;Estándar|2.914.689-5;Guillermo;guille@ort.edu.uy;35;Estándar|3.914.689-5;Guillermo;guille2@ort.edu.uy;35;Estándar", retorno.getValorString());
 

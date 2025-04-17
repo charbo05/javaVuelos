@@ -236,9 +236,18 @@ public class ImplementacionSistema implements Sistema  {
     //------------------------------------------------------------------------------------------------
     @Override
     public Retorno listarViajerosPorCorreoAscendente() {
-        return Retorno.noImplementada();
+
+
+        if (viajerosPorCorreo.esVacia()) {
+            return Retorno.ok(""); // OK, pero sin contenido
+        }
+
+        String resultado = viajerosPorCorreo.listarAscendente(); // este debe devolver el String concatenado
+        return Retorno.ok(resultado);
     }
 
+
+    //-------------------------------------------------------------------------------------------------
     @Override
     public Retorno listarViajerosPorCategoria(Categoria unaCategoria) {
         return Retorno.noImplementada();

@@ -39,10 +39,12 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error1("La cantidad de ciudades debe ser mayor a 4");
         }
 
+        this.maxCiudades = maxCiudades;
         // Inicialización de las estructuras requeridas
         viajerosPorCedula = new ABB<>();
         viajerosPorCorreo = new ABB<>(Viajero.comparadorPorCorreo);
 
+        ciudades = new ABB<>();
 
         // Devolver retorno exitoso
         return Retorno.ok();

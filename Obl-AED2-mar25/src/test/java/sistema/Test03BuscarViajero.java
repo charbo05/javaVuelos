@@ -33,6 +33,8 @@ public class Test03BuscarViajero {
 
     }
 
+
+
     @Test
     void buscarViajero_2Comparaciones_IzquierdaOk() {
         s.registrarViajero("2.000.000-0", "Carlos", "carlos@ort.edu.uy", 40, Categoria.PLATINO);
@@ -61,37 +63,43 @@ public class Test03BuscarViajero {
     //----------------------------------------------------------------
 
 
+   /* 1. Si la cédula es vacía o null.
+
+
+*/
     @Test
-    void buscarViajeroCorreoVacioError1() {
+    void buscarViajeroCedulaVacioError1() {
         // No es necesario registrar un viajero para este test
-        Retorno retorno = s.buscarViajeroPorCorreo("");
+        Retorno retorno = s.buscarViajeroPorCedula("");
         assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
 
-         retorno = s.buscarViajeroPorCorreo(null);
+         retorno = s.buscarViajeroPorCedula(null);
         assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
 
     }
 
     //-------------------------------------------------------------
 
+    //   2. Si la cédula no tiene formato válido.
     @Test
-    void buscarViajeroCorreoFormatoInvalidoError2() {
+    void buscarViajeroCedulaFormatoInvalidoError2() {
         // No es necesario registrar un viajero para este test
-        Retorno retorno = s.buscarViajeroPorCorreo("pepe.com");
+        Retorno retorno = s.buscarViajeroPorCedula("4.5698-3");
         assertEquals(Retorno.Resultado.ERROR_2, retorno.getResultado());
 
-        retorno = s.buscarViajeroPorCorreo("pepito@pepito");
+        retorno = s.buscarViajeroPorCedula("42365987");
         assertEquals(Retorno.Resultado.ERROR_2, retorno.getResultado());
 
     }
 
+    //3. Si no existe un viajero registrado con esa cédula.
     @Test
     void buscarViajeroNoRegistradoError3() {
-        // Correo correcta pero no registrada
-        Retorno retorno = s.buscarViajeroPorCorreo("pepe@pepe.com");
+        // Cedula correcta pero no registrada
+        Retorno retorno = s.buscarViajeroPorCedula("2.000.000-0");
         assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());
 
-        retorno = s.buscarViajeroPorCorreo("diego@armando.com");
+        retorno = s.buscarViajeroPorCedula("3.000.000-0");
         assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());
 
     }

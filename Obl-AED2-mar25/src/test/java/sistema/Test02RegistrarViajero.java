@@ -23,6 +23,8 @@ public class Test02RegistrarViajero {
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
     }
 
+    /*1. Si alguno de los parámetros es vacío o null.
+ */
     @Test
     void registrarViajeroError1() {
         retorno = s.registrarViajero("", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
@@ -47,6 +49,8 @@ public class Test02RegistrarViajero {
         assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    /*2. Si la cédula no es una cédula con formato válido.*/
     @Test
     void registrarViajeroError2() {
         retorno = s.registrarViajero("1.91.4.689-5", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
@@ -59,6 +63,7 @@ public class Test02RegistrarViajero {
         assertEquals(Retorno.Resultado.ERROR_2, retorno.getResultado());
     }
 
+    //------------------------------------------------------------------------------
     //3. Si el correo no tiene el formato válido.
     @Test
     void registrarViajeroError3() {
@@ -72,6 +77,7 @@ public class Test02RegistrarViajero {
         assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());
     }
 
+    //-------------------------------------------------------------------------------------------------------
     //4. Si la edad no está en el rango válido [0 ~ 139] límites incluidos.
     @Test
     void registrarViajeroError4() {
@@ -89,7 +95,8 @@ public class Test02RegistrarViajero {
     }
 
 
-// 5. Si ya existe un viajero registrado con esa cédula.
+    //------------------------------------------------------------------------------------------------------
+    // 5. Si ya existe un viajero registrado con esa cédula.
     @Test
     void registrarViajeroError5() {
 
@@ -105,6 +112,7 @@ public class Test02RegistrarViajero {
 
     }
 
+    //----------------------------------------------------------------------------------------------------------------
     //6. Si ya existe un viajero registrado con ese correo.
     @Test
     void registrarViajeroError6() {

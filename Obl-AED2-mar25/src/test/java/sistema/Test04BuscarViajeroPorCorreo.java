@@ -21,6 +21,7 @@ public class Test04BuscarViajeroPorCorreo {
     @Test
     void buscarViajeroOk() {
         s.registrarViajero("1.914.689-5", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
+
         retorno = s.buscarViajeroPorCorreo("guille@ort.edu.uy");
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
@@ -56,6 +57,8 @@ public class Test04BuscarViajeroPorCorreo {
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
         assertEquals(3, retorno.getValorInteger());
         assertEquals("2.500.000-0;Dana;dana@ort.edu.uy;28;Frecuente", retorno.getValorString());
+
+        System.out.println(retorno.getResultado());
     }
 
     //----------------------------------------------------------------

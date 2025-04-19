@@ -174,18 +174,7 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         }
     }
 
-  /*  public String listarAscendente(NodoABB nodo, boolean esPrimero, String cadena){
 
-        if(nodo != null){
-
-            Viajero viajero = (Viajero) nodo.getDato();
-
-            if(!esPrimero){
-                cadena =
-            }
-        }
-    }
-*/
     public T borrarMinimo() {
         if (raiz == null) throw new RuntimeException("Árbol vacío");
         if (raiz.izq == null) {

@@ -23,7 +23,7 @@ public class Test07ListarViajerosPorCorreoAscendente {
         @Test
         void listarViajeroCorreosOk() {
         s.registrarViajero("3.914.689-5", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
-        s.registrarViajero("2.914.689-5", "Guillermo", "hugo@ort.edu.uy", 35, Categoria.ESTANDAR);
+        s.registrarViajero("2.914.689-5", "Hugo", "hugo@ort.edu.uy", 35, Categoria.ESTANDAR);
         s.registrarViajero("1.914.689-5", "Guillermo", "asma@ort.edu.uy", 35, Categoria.ESTANDAR);
 
         retorno = s.listarViajerosPorCorreoAscendente();
@@ -32,7 +32,7 @@ public class Test07ListarViajerosPorCorreoAscendente {
 
         // assertEquals(1, retorno.getValorInteger());
 
-        assertEquals("1.914.689-5;Guillermo;asma@ort.edu.uy;35;Estándar|2.914.689-5;Guillermo;hugo@ort.edu.uy;35;Estándar|3.914.689-5;Guillermo;guille@ort.edu.uy;35;Estándar", retorno.getValorString());
+        assertEquals("1.914.689-5;Guillermo;asma@ort.edu.uy;35;Estándar|3.914.689-5;Guillermo;guille@ort.edu.uy;35;Estándar|2.914.689-5;Hugo;hugo@ort.edu.uy;35;Estándar", retorno.getValorString());
 
             System.out.println(retorno);
 

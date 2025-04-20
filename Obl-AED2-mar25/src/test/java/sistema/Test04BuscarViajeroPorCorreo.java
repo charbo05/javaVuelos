@@ -61,7 +61,7 @@ public class Test04BuscarViajeroPorCorreo {
         assertEquals(3, retorno.getValorInteger());
         assertEquals("2.499.000-0;Juana;juana@ort.edu.uy;28;Frecuente", retorno.getValorString());
 
-        System.out.println(retorno.getResultado());
+
     }
 
     //----------------------------------------------------------------

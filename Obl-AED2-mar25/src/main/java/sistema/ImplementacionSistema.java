@@ -41,8 +41,9 @@ public class ImplementacionSistema implements Sistema  {
 
         this.maxCiudades = maxCiudades;
         // Inicialización de las estructuras requeridas
-        viajerosPorCedula = new ABB<>();
-        viajerosPorCorreo = new ABB<>(Viajero.comparadorPorCorreo);
+        viajerosPorCedula = new ABB<>(new Viajero.ComparadorPorCedula());
+        viajerosPorCorreo = new ABB<>(new Viajero.ComparadorPorCorreo());
+
 
         ciudades = new ABB<>();
 

@@ -116,13 +116,19 @@ public class Viajero implements Comparable<Viajero>
     }
 
 
+    public static class ComparadorPorCedula implements Comparator<Viajero> {
+        @Override
+        public int compare(Viajero v1, Viajero v2) {
+            return v1.getCedula().compareTo(v2.getCedula());
+        }
+    }
 
-    public static Comparator<Viajero> comparadorPorCorreo = new Comparator<Viajero>() {
+    public static class ComparadorPorCorreo implements Comparator<Viajero> {
         @Override
         public int compare(Viajero v1, Viajero v2) {
             return v1.getCorreo().compareTo(v2.getCorreo());
         }
-    };
+    }
 
 
 

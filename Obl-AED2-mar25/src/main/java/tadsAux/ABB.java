@@ -6,7 +6,6 @@ import java.util.Comparator;
 
 public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
     private NodoABB raiz;
-
     private Comparator<T> comparador;
 
 
@@ -68,7 +67,8 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         if (nodo == null) {
             return new NodoABB(dato);
         }
-        int cmp = dato.compareTo(nodo.dato);
+//        int cmp = dato.compareTo(nodo.dato);
+        int cmp = comparador.compare(dato, nodo.dato);
         if (cmp < 0) {
             nodo.izq = insertar(nodo.izq, dato);
         } else if (cmp > 0) {

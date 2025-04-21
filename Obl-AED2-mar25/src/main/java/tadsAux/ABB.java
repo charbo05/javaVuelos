@@ -143,6 +143,7 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
     }
 
 
+    // recorrido inorden
     public String listarAscendente() {
         StringBuilder sb = new StringBuilder();
         listarAscendente(this.raiz, sb);
@@ -153,6 +154,7 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
         if (nodo != null) {
             listarAscendente(nodo.izq, sb);
             if (sb.length() > 0) sb.append("|");
+            //Procesamiento del Nodo Actual
             sb.append(nodo.dato.toString());
             listarAscendente(nodo.der, sb);
         }
@@ -173,6 +175,8 @@ public class ABB<T extends Comparable<T>> implements IArbolBusqueda<T> {
             imprimirDesc(nodo.izq, sb);
         }
     }
+
+
 
 
     public T borrarMinimo() {

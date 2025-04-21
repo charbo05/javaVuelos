@@ -1,5 +1,7 @@
 package dominio;
 
+import java.util.Comparator;
+
 public class Ciudad implements Comparable<Ciudad>  {
 
     String nombre;
@@ -45,6 +47,15 @@ public class Ciudad implements Comparable<Ciudad>  {
 
     @Override
     public int compareTo(Ciudad otra) {
-        return this.codigo.compareTo(otra.codigo);     }
+        return this.codigo.compareTo(otra.codigo);
+    }
+
+
+    public static class ComparadorPorCodigo implements Comparator<Ciudad> {
+        @Override
+        public int compare(Ciudad c1, Ciudad c2) {
+            return c1.getCodigo().compareTo(c2.getCodigo());
+        }
+    }
 
 }

@@ -9,45 +9,39 @@ import interfaz.*;
 //CHRISTIAN CHARBONNIER 285506
 public class ImplementacionSistema implements Sistema  {
 
-    //tenemos las dos posibilidades viajero por correo o ci
+    // ABB para búsquedas de viajeros
     private ABB<Viajero> viajerosPorCedula;
     private ABB<Viajero> viajerosPorCorreo;
-    private int maxCiudades;
+
+    // ABB para las ciudades
     private ABB<Ciudad> ciudades;
 
+    // ABB separados por categoría
+    private ABB<Viajero> viajerosEstandar;
+    private ABB<Viajero> viajerosFrecuente;
+    private ABB<Viajero> viajerosPlatino;
 
+    private int maxCiudades;
 
-
-    /*01.- Inicializar Sistema
-
-    Retorno inicializarSistema (int maxCiudades);
-
-    Descripción: Inicializa las estructuras necesarias para representar el sistema especificado, capaz de registrar
-    como máximo la cantidad maxCiudades de ciudades diferentes en el sistema.
-
-    Restricción de eficiencia: no tiene.
-
-    Retornos posibles
-    OK Si El sistema pudo ser inicializado exitosamente.
-    ERROR 1. Si maxCiudades es menor o igual a 4.
-    NO_IMPLEMENTADA Cuando aún no se implementó. Es el tipo de retorno por defecto.*/
     @Override
     public Retorno inicializarSistema(int maxCiudades) {
 
-        // Validación del requisito mínimo
         if (maxCiudades <= 4) {
             return Retorno.error1("La cantidad de ciudades debe ser mayor a 4");
         }
 
         this.maxCiudades = maxCiudades;
-        // Inicialización de las estructuras requeridas
+
+        // Comparadores personalizados
         viajerosPorCedula = new ABB<>(new Viajero.ComparadorPorCedula());
         viajerosPorCorreo = new ABB<>(new Viajero.ComparadorPorCorreo());
+        ciudades = new ABB<>(new Ciudad.ComparadorPorCodigo());
 
+        // ABB por categoría (ordenados por cédula para poder listar en orden creciente)
+        viajerosEstandar = new ABB<>(new Viajero.ComparadorPorCedula());
+        viajerosFrecuente = new ABB<>(new Viajero.ComparadorPorCedula());
+        viajerosPlatino = new ABB<>(new Viajero.ComparadorPorCedula());
 
-        ciudades = new ABB<>();
-
-        // Devolver retorno exitoso
         return Retorno.ok();
     }
 
@@ -105,6 +99,13 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error6("Ya existe un viajero registrado con ese email");
         }
 
+        if (viajeroNuevo.getCategoria() == Categoria.ESTANDAR) {
+            viajerosEstandar.insertar(viajeroNuevo);
+        } else if (viajeroNuevo.getCategoria() == Categoria.FRECUENTE) {
+            viajerosFrecuente.insertar(viajeroNuevo);
+        } else if (viajeroNuevo.getCategoria() == Categoria.PLATINO) {
+            viajerosPlatino.insertar(viajeroNuevo);
+        }
 
 
         viajerosPorCorreo.insertar(viajeroNuevo);
@@ -253,8 +254,25 @@ public class ImplementacionSistema implements Sistema  {
     //-------------------------------------------------------------------------------------------------
     @Override
     public Retorno listarViajerosPorCategoria(Categoria unaCategoria) {
-        return Retorno.noImplementada();
-    }
+
+            ABB<Viajero> abbCategoria;
+
+            if (unaCategoria == Categoria.ESTANDAR) {
+                abbCategoria = viajerosEstandar;
+            } else if (unaCategoria == Categoria.FRECUENTE) {
+                abbCategoria = viajerosFrecuente;
+            } else if (unaCategoria == Categoria.PLATINO) {
+                abbCategoria = viajerosPlatino;
+            } else {
+                return Retorno.error1("INGRESA UNA CATEGORIA VALIDA");
+            }
+
+            String resultado = abbCategoria.listarAscendente(); // Esto hace un recorrido inorden
+
+            return Retorno.ok(resultado);
+        }
+
+
 
     @Override
     public Retorno listarViajerosDeUnRangoAscendente(int rango) {

@@ -21,6 +21,8 @@ public class ImplementacionSistema implements Sistema  {
     private ABB<Viajero> viajerosFrecuente;
     private ABB<Viajero> viajerosPlatino;
 
+    private ABB<Viajero>[] viajerosPorEdad;  //Agregamos un arreglo de 14 ABBs (uno por rango de edad)
+                                                //en inicializar sistema lo inicializamos con 14
     private int maxCiudades;
 
     @Override
@@ -42,6 +44,13 @@ public class ImplementacionSistema implements Sistema  {
         viajerosFrecuente = new ABB<>(new Viajero.ComparadorPorCedula());
         viajerosPlatino = new ABB<>(new Viajero.ComparadorPorCedula());
 
+
+        viajerosPorEdad = new ABB[14];//Aca lo inicializamos con los 14 ABB (uno por rango de edad)
+        for (int i = 0; i < 14; i++) {
+            viajerosPorEdad[i] = new ABB<>(new Viajero.ComparadorPorCedula());
+        }
+
+
         return Retorno.ok();
     }
 
@@ -62,11 +71,22 @@ public class ImplementacionSistema implements Sistema  {
     NO_IMPLEMENTADA Cuando aún no se implementó. */
 
 
+    //Metodo auxiliar para saber los rangos, van de 10 en 10
+    private int obtenerRangoEdad(int edad) {
+        if (edad < 0 || edad > 139)
+            return -1;
+        return edad / 10;
+    }
+
     @Override
     public Retorno registrarViajero(String cedula, String nombre, String correo, int edad, Categoria categoria) {
 
         //Creamos el viajero para buscar en el ABB
         Viajero viajeroNuevo = new Viajero(cedula, nombre, correo, edad, categoria);
+
+        int rangoEdad = obtenerRangoEdad(viajeroNuevo.getEdad());
+        viajerosPorEdad[rangoEdad].insertar(viajeroNuevo);
+
 
 
         if (    cedula == null || cedula.isEmpty() || nombre == null ||
@@ -276,7 +296,31 @@ public class ImplementacionSistema implements Sistema  {
 
     @Override
     public Retorno listarViajerosDeUnRangoAscendente(int rango) {
-        return Retorno.noImplementada();
+        if (rango < 0 || rango > 13)
+            return Retorno.error1("El rango debe estar entre 0 y 13");
+
+        StringBuilder sb = new StringBuilder();
+
+        ABB<Viajero> viajeros = viajerosPorEdad[rango]; // Esto te devuelve los viajeros ordenados por cédula
+
+        NodoLista<Viajero> actual = viajeros.getInicio();
+        while (actual != null) {
+            Viajero v = actual.dato;
+            sb.append(v.getCedula()).append(";")
+                    .append(v.getNombre()).append(";")
+                    .append(v.getCorreo()).append(";")
+                    .append(v.getEdad()).append(";")
+                    .append(v.getCategoria())
+                    .append("|");
+
+            actual = actual.getSiguiente();
+        }
+
+        if (sb.length() > 0)
+            sb.setLength(sb.length() - 1); // Elimina el último '|'
+
+        valorString = sb.toString();
+        return Retorno.ok();
     }
 
     @Override

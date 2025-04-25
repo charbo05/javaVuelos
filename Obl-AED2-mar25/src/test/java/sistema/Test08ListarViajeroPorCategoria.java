@@ -73,11 +73,12 @@ public class Test08ListarViajeroPorCategoria {
         s.registrarViajero("2.000.000-2", "Sofi", "sofi@ort.edu.uy", 30, Categoria.FRECUENTE);
         s.registrarViajero("3.000.000-3", "Diego", "diego@ort.edu.uy", 28, Categoria.PLATINO);
         s.registrarViajero("4.000.000-4", "Ana", "ana@ort.edu.uy", 35, Categoria.ESTANDAR);
+        s.registrarViajero("3.914.689-5", "Guillermo", "zama@ort.edu.uy", 35, Categoria.FRECUENTE);
 
         retorno = s.listarViajerosPorCategoria(Categoria.FRECUENTE);
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
-        assertEquals("2.000.000-2;Sofi;sofi@ort.edu.uy;30;Frecuente", retorno.getValorString());
+        assertEquals("2.000.000-2;Sofi;sofi@ort.edu.uy;30;Frecuente|3.914.689-5;Guillermo;zama@ort.edu.uy;35;Frecuente", retorno.getValorString());
     }
 
 

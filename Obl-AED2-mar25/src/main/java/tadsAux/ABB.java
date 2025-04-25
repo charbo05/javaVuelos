@@ -1,6 +1,6 @@
 package tadsAux;
 
-import dominio.Viajero;
+import interfaz.IArbolBusqueda;
 
 import java.util.Comparator;
 

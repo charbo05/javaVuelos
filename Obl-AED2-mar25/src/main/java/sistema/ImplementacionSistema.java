@@ -1,5 +1,6 @@
 package sistema;
 import tadsAux.ABB;
+import tadsAux.ListaImpl;
 import tadsAux.ResultadoBusqueda;
 import dominio.Ciudad;
 import dominio.Viajero;
@@ -13,6 +14,8 @@ public class ImplementacionSistema implements Sistema  {
     private ABB<Viajero> viajerosPorCedula;
     private ABB<Viajero> viajerosPorCorreo;
 
+    private ListaImpl<Viajero> listaDeviajerosCi;
+
     // ABB para las ciudades
     private ABB<Ciudad> ciudades;
 
@@ -21,8 +24,8 @@ public class ImplementacionSistema implements Sistema  {
     private ABB<Viajero> viajerosFrecuente;
     private ABB<Viajero> viajerosPlatino;
 
-    private ABB<Viajero>[] viajerosPorEdad;  //Agregamos un arreglo de 14 ABBs (uno por rango de edad)
-                                                //en inicializar sistema lo inicializamos con 14
+    private ListaImpl<Viajero>[] viajerosPorRango;
+
     private int maxCiudades;
 
     @Override
@@ -44,11 +47,15 @@ public class ImplementacionSistema implements Sistema  {
         viajerosFrecuente = new ABB<>(new Viajero.ComparadorPorCedula());
         viajerosPlatino = new ABB<>(new Viajero.ComparadorPorCedula());
 
+        listaDeviajerosCi = new ListaImpl<>();
 
-        viajerosPorEdad = new ABB[14];//Aca lo inicializamos con los 14 ABB (uno por rango de edad)
+
+        viajerosPorRango = (ListaImpl<Viajero>[]) new ListaImpl[14];
+
         for (int i = 0; i < 14; i++) {
-            viajerosPorEdad[i] = new ABB<>(new Viajero.ComparadorPorCedula());
+            viajerosPorRango[i] = new ListaImpl<>();
         }
+
 
 
         return Retorno.ok();
@@ -85,7 +92,7 @@ public class ImplementacionSistema implements Sistema  {
         Viajero viajeroNuevo = new Viajero(cedula, nombre, correo, edad, categoria);
 
         int rangoEdad = obtenerRangoEdad(viajeroNuevo.getEdad());
-        viajerosPorEdad[rangoEdad].insertar(viajeroNuevo);
+        viajerosPorRango[rangoEdad].insertar(viajeroNuevo);
 
 
 
@@ -293,25 +300,29 @@ public class ImplementacionSistema implements Sistema  {
         }
 
 
-
     @Override
     public Retorno listarViajerosDeUnRangoAscendente(int rango) {
         if (rango < 0 || rango > 13)
             return Retorno.error1("El rango debe estar entre 0 y 13");
 
+        ListaImpl<Viajero> listaViajeros = viajerosPorRango[rango];
+
+        if (listaViajeros.esVacia()) {
+            return Retorno.ok(""); // Si no hay viajeros en el rango, retornar vacío
+        }
+
+        listaViajeros.ordenarPor(new Viajero.ComparadorPorCedula()); // Solo si tu ListaImpl permite ordenar
+
         StringBuilder sb = new StringBuilder();
+        NodoLista<Viajero> actual = listaViajeros.getInicio();
 
-        ABB<Viajero> viajeros = viajerosPorEdad[rango]; // Esto te devuelve los viajeros ordenados por cédula
-
-        NodoLista<Viajero> actual = viajeros.getInicio();
         while (actual != null) {
             Viajero v = actual.dato;
             sb.append(v.getCedula()).append(";")
                     .append(v.getNombre()).append(";")
                     .append(v.getCorreo()).append(";")
                     .append(v.getEdad()).append(";")
-                    .append(v.getCategoria())
-                    .append("|");
+                    .append(v.getCategoria()).append("|");
 
             actual = actual.getSiguiente();
         }
@@ -319,9 +330,9 @@ public class ImplementacionSistema implements Sistema  {
         if (sb.length() > 0)
             sb.setLength(sb.length() - 1); // Elimina el último '|'
 
-        valorString = sb.toString();
-        return Retorno.ok();
+        return Retorno.ok(sb.toString());
     }
+
 
     @Override
     public Retorno registrarCiudad(String codigo, String nombre) {

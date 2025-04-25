@@ -1,4 +1,6 @@
-package tadsAux;
+package interfaz;
+
+import tadsAux.ResultadoBusqueda;
 
 public interface IArbolBusqueda <T extends Comparable <T>> {
 

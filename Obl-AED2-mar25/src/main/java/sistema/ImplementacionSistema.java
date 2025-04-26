@@ -308,29 +308,20 @@ public class ImplementacionSistema implements Sistema  {
         ListaImpl<Viajero> listaViajeros = viajerosPorRango[rango];
 
         if (listaViajeros.esVacia()) {
-            return Retorno.ok(""); // Si no hay viajeros en el rango, retornar vacío
+            return Retorno.ok("");
         }
 
-        listaViajeros.ordenarPor(new Viajero.ComparadorPorCedula()); // Solo si tu ListaImpl permite ordenar
+        listaViajeros.ordenarPor(new Viajero.ComparadorPorCedula());
 
-        StringBuilder sb = new StringBuilder();
-        NodoLista<Viajero> actual = listaViajeros.getInicio();
+        String listado = listaViajeros.toStringPersonalizado(v ->
+                v.getCedula() + ";" +
+                        v.getNombre() + ";" +
+                        v.getCorreo() + ";" +
+                        v.getEdad() + ";" +
+                        v.getCategoria()
+        );
 
-        while (actual != null) {
-            Viajero v = actual.dato;
-            sb.append(v.getCedula()).append(";")
-                    .append(v.getNombre()).append(";")
-                    .append(v.getCorreo()).append(";")
-                    .append(v.getEdad()).append(";")
-                    .append(v.getCategoria()).append("|");
-
-            actual = actual.getSiguiente();
-        }
-
-        if (sb.length() > 0)
-            sb.setLength(sb.length() - 1); // Elimina el último '|'
-
-        return Retorno.ok(sb.toString());
+        return Retorno.ok(listado);
     }
 
 

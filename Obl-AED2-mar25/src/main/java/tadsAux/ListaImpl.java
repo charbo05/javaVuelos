@@ -2,6 +2,9 @@ package tadsAux;
 
 import interfaz.ILista;
 
+import java.util.Comparator;
+import java.util.function.Function;
+
 public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
 
     protected NodoLista<T> inicio;
@@ -142,9 +145,61 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
             return dato.toString();
         }
 
-
-
-
-
     }
+
+    //-------------------------------------------------------
+
+    public String toStringPersonalizado(Function<T, String> formateador) {
+        StringBuilder sb = new StringBuilder();
+        NodoLista<T> actual = inicio;
+
+        while (actual != null) {
+            sb.append(formateador.apply(actual.getDato())).append("|");
+            actual = actual.getSig();
+        }
+
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1); // eliminar el último "|"
+        }
+
+        return sb.toString();
+    }
+
+
+    private NodoLista<T> insertarOrdenado(NodoLista<T> aux, NodoLista<T> nuevoNodo, Comparator<? super T> comparador) {
+        nuevoNodo.setSig(null); // Aseguramos que el nuevo nodo apunte a null inicialmente
+
+        if (aux == null || comparador.compare(nuevoNodo.getDato(), aux.getDato()) <= 0) {
+            nuevoNodo.setSig(aux);
+            return nuevoNodo;
+        }
+
+        NodoLista<T> current = aux;
+        while (current.getSig() != null && comparador.compare(nuevoNodo.getDato(), current.getSig().getDato()) > 0) {
+            current = current.getSig();
+        }
+        nuevoNodo.setSig(current.getSig());
+        current.setSig(nuevoNodo);
+
+        return aux;
+    }
+
+    public void ordenarPor(Comparator<? super T> comparador) {
+        if (inicio == null || inicio.getSig() == null) {
+            return; // La lista está vacía o tiene un solo elemento, ya está ordenada
+        }
+
+        NodoLista<T> aux = null;
+        NodoLista<T> current = inicio;
+
+        while (current != null) {
+            NodoLista<T> next = current.getSig();
+            aux = insertarOrdenado(aux, current, comparador);
+            current = next;
+        }
+        inicio = aux;
+    }
+
+
+
 }

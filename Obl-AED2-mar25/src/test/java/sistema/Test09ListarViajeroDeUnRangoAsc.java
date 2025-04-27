@@ -20,11 +20,11 @@ public class Test09ListarViajeroDeUnRangoAsc {
 
     @Test
     void listarViajeroCategoriaOkListaVacia() {
-        s.registrarViajero("3.914.689-5", "Guillermo", "guille@ort.edu.uy", 35, Categoria.ESTANDAR);
+        s.registrarViajero("3.914.689-5", "Guillermo", "guille@ort.edu.uy", 8, Categoria.ESTANDAR);
         s.registrarViajero("2.914.689-5", "Hugo", "hugo@ort.edu.uy", 35, Categoria.ESTANDAR);
         s.registrarViajero("5.914.689-5", "Guillermo", "asma@ort.edu.uy", 35, Categoria.ESTANDAR);
 
-        retorno = s.listarViajerosDeUnRangoAscendente(1);
+        retorno = s.listarViajerosDeUnRangoAscendente(10);
 
         assertEquals(Retorno.Resultado.OK, retorno.getResultado());
 
@@ -50,6 +50,42 @@ public class Test09ListarViajeroDeUnRangoAsc {
 
 
         assertEquals("3.914.689-5;Guillermo;guille@ort.edu.uy;35;Estándar|5.914.689-5;Guillermo;asma@ort.edu.uy;35;Estándar", retorno.getValorString());
+
+        //  System.out.println(retorno);
+
+
+    }
+
+
+    @Test
+    void listarViajeroCategoriaInvalidoMenor() {
+
+
+        retorno = s.listarViajerosDeUnRangoAscendente(-1);
+
+        assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
+
+
+
+        assertEquals("El rango debe estar entre 0 y 13", retorno.getValorString());
+
+        //  System.out.println(retorno);
+
+
+    }
+
+
+    @Test
+    void listarViajeroCategoriaInvalidoMayor() {
+
+
+        retorno = s.listarViajerosDeUnRangoAscendente(195);
+
+        assertEquals(Retorno.Resultado.ERROR_1, retorno.getResultado());
+
+
+
+        assertEquals("El rango debe estar entre 0 y 13", retorno.getValorString());
 
         //  System.out.println(retorno);
 

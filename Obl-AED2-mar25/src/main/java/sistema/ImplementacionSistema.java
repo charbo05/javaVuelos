@@ -82,6 +82,7 @@ public class ImplementacionSistema implements Sistema  {
     private int obtenerRangoEdad(int edad) {
         if (edad < 0 || edad > 139)
             return -1;
+
         return edad / 10;
     }
 

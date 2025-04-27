@@ -325,10 +325,49 @@ public class ImplementacionSistema implements Sistema  {
         return Retorno.ok(listado);
     }
 
+        /*
+    Retorno registrarCiudad(String codigo, String nombre);
+    Descripción: Registra una ciudad en el sistema con el código y nombre indicado. El código es el identificador
+    único, el código y nombre no pueden ser vacíos ni null. Esta operación no tiene restricciones de eficiencia.
+    Retornos posibles
+    OK
+    Si la ciudad fue registrada exitosamente.
+    ERROR
+    1. Si en el sistema ya hay registrados maxCuidades.
+    2. Si código o nombre son vacíos o null.
+    3. Si ya existe una ciudad con ese código.
+    * */
+
+
 
     @Override
     public Retorno registrarCiudad(String codigo, String nombre) {
-        return Retorno.noImplementada();
+
+        int cantidadCiudades = ciudades.cantNodos();
+        //Objeto busqueda
+        Ciudad ciudad = new Ciudad(codigo, nombre);
+
+        //. Si en el sistema ya hay registrados maxCuidades.
+        if( cantidadCiudades >= maxCiudades) {
+            return Retorno.error1("No se pueden ingresar mas ciudades al sistema");
+        }
+
+        //Si código o nombre son vacíos o null.
+        if(codigo == null || codigo.isEmpty() || nombre == null || nombre.isEmpty()) {
+
+            return Retorno.error2("Codigo o nombre vacio o null");
+        }
+
+        if (ciudades.buscar(ciudad) != null) {
+
+            return Retorno.error3("Ya existe una ciudad registrada con ese codigo. Intenta nuevamente");
+        }
+
+        ciudades.insertar(ciudad);
+
+
+
+        return Retorno.ok();
     }
 
     @Override

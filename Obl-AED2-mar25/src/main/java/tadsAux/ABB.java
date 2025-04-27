@@ -216,5 +216,26 @@ public boolean esVacia(){
             toStringRec(nodo.izq, prefijo + "    ", sb);
         }
     }
+
+
+    public int cantNodos() {
+        if (raiz == null) return 0;
+        return cantNodosRec(raiz);
+
+    }
+
+
+    private int cantNodosRec(NodoABB nodo) {
+        if (nodo.getIzq() == null && nodo.getDer() == null) {
+            return 1;
+        }
+        if (nodo.getIzq() != null && nodo.getDer() == null) {
+            return 1 + cantNodosRec(nodo.getIzq());
+        }
+        if (nodo.getIzq() == null && nodo.getDer() != null) {
+            return 1 + cantNodosRec(nodo.getDer());
+        }
+        return 1 + cantNodosRec(nodo.getIzq()) + cantNodosRec(nodo.getDer());
+    }
 }
 

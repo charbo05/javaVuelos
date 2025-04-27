@@ -14,4 +14,5 @@ public interface IArbolBusqueda <T extends Comparable <T>> {
     T buscar(T dato);
     ResultadoBusqueda<T> buscarConComparaciones(T dato);
     boolean esVacia();
+    int cantNodos();
 }

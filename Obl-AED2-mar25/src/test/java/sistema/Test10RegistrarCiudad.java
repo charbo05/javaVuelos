@@ -68,7 +68,7 @@ public class Test10RegistrarCiudad {
     @Test
     void RegistrarCiudadExistenteError3() {
         retorno = s.registrarCiudad("123", "Ciudad de prueba");
-        assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());
+        assertEquals(Retorno.Resultado.OK, retorno.getResultado());
 
         retorno = s.registrarCiudad("123", "Ciudad de prueba");
         assertEquals(Retorno.Resultado.ERROR_3, retorno.getResultado());

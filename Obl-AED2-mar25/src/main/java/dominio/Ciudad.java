@@ -1,11 +1,16 @@
 package dominio;
 
+import tadsAux.ListaImpl;
+
 import java.util.Comparator;
 
 public class Ciudad implements Comparable<Ciudad>  {
 
-    String nombre;
-    String codigo;
+    private String nombre;
+    private String codigo;
+
+    private ListaImpl<Ciudad> conexiones;
+    private ListaImpl<Vuelo> vuelos;
 
     public Ciudad(String nombre, String codigo) {
         this.nombre = nombre;
@@ -26,6 +31,14 @@ public class Ciudad implements Comparable<Ciudad>  {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public ListaImpl<Ciudad> getConexiones() {
+        return conexiones;
+    }
+
+    public ListaImpl<Vuelo> getVuelos() {
+        return vuelos;
     }
 
 

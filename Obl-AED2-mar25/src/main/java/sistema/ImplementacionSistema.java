@@ -4,6 +4,7 @@ import tadsAux.ListaImpl;
 import tadsAux.ResultadoBusqueda;
 import dominio.Ciudad;
 import dominio.Viajero;
+import dominio.Vuelo;
 import interfaz.*;
 
 
@@ -102,7 +103,7 @@ public class ImplementacionSistema implements Sistema  {
                 categoria == null )
 
         {
-           return Retorno.error1("Debe completar todos los parametros");
+            return Retorno.error1("Debe completar todos los parametros");
         }
 
         if (!cedula.matches("^(\\d\\.\\d{3}\\.\\d{3}-\\d|\\d{3}\\.\\d{3}-\\d)$")) {
@@ -283,22 +284,22 @@ public class ImplementacionSistema implements Sistema  {
     @Override
     public Retorno listarViajerosPorCategoria(Categoria unaCategoria) {
 
-            ABB<Viajero> abbCategoria;
+        ABB<Viajero> abbCategoria;
 
-            if (unaCategoria == Categoria.ESTANDAR) {
-                abbCategoria = viajerosEstandar;
-            } else if (unaCategoria == Categoria.FRECUENTE) {
-                abbCategoria = viajerosFrecuente;
-            } else if (unaCategoria == Categoria.PLATINO) {
-                abbCategoria = viajerosPlatino;
-            } else {
-                return Retorno.error1("INGRESA UNA CATEGORIA VALIDA");
-            }
-
-            String resultado = abbCategoria.listarAscendente(); // Esto hace un recorrido inorden
-
-            return Retorno.ok(resultado);
+        if (unaCategoria == Categoria.ESTANDAR) {
+            abbCategoria = viajerosEstandar;
+        } else if (unaCategoria == Categoria.FRECUENTE) {
+            abbCategoria = viajerosFrecuente;
+        } else if (unaCategoria == Categoria.PLATINO) {
+            abbCategoria = viajerosPlatino;
+        } else {
+            return Retorno.error1("INGRESA UNA CATEGORIA VALIDA");
         }
+
+        String resultado = abbCategoria.listarAscendente(); // Esto hace un recorrido inorden
+
+        return Retorno.ok(resultado);
+    }
 
 
     @Override
@@ -372,12 +373,108 @@ public class ImplementacionSistema implements Sistema  {
 
     @Override
     public Retorno registrarConexion(String codigoCiudadOrigen, String codigoCiudadDestino) {
-        return Retorno.noImplementada();
+
+        //Si alguno de los parámetros es vacío o null.
+        if(codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty() || codigoCiudadDestino == null || codigoCiudadDestino.isEmpty()){
+            return Retorno.error1("Parametros invalidos");
+        }
+
+        //Busqueda de Ciudades
+        Ciudad ciudadOrigen = new Ciudad(codigoCiudadOrigen,"");//Creo una ciudad para poder buscar
+        ResultadoBusqueda<Ciudad> ciudadOrigenResultado = ciudades.buscarConComparaciones(ciudadOrigen);
+
+        Ciudad ciudadDestino = new Ciudad(codigoCiudadDestino,"");//Creo una ciudad para poder buscar
+        ResultadoBusqueda<Ciudad> ciudadDestinoResultado = ciudades.buscarConComparaciones(ciudadDestino);
+
+
+        //Si no existe la ciudad de origen.
+        if(ciudadOrigenResultado.getDato() == null){
+            return Retorno.error2("No existe la ciudad de Origen");
+        }
+
+        //Si no existe la ciudad de destino.
+        if(ciudadDestinoResultado.getDato() == null){
+            return Retorno.error3("No existe la ciudad de Destino");
+        }
+
+        //Busco si ya existe la conexion
+        boolean existeConexion = false;
+        for(int i = 0; i < ciudadOrigenResultado.getDato().getConexiones().cantNodos() ; i++ ){
+            Ciudad ciudadAux = ciudadOrigenResultado.getDato().getConexiones().obtener(i);
+            if(ciudadAux.getCodigo().equals(ciudadDestinoResultado.getDato().getCodigo())){
+                existeConexion = true;
+            }
+        }
+
+        //Si ya existe una conexión entre el origen y el destino.
+        if(existeConexion){
+            return Retorno.error4("Ya existe esa conexion");
+        }
+
+        ciudadOrigenResultado.getDato().getConexiones().insertar(ciudadDestinoResultado.getDato());
+
+        return Retorno.ok();
     }
 
     @Override
     public Retorno registrarVuelo(String codigoCiudadOrigen, String codigoCiudadDestino, String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
-        return Retorno.noImplementada();
+
+        //Si alguno de los parámetros double es menor o igual a 0.
+        if(combustible <= 0 || minutos <= 0 || costoEnDolares <= 0){
+            return Retorno.error1("Los parametros double no pueden ser menores o iguales a cero");
+        }
+
+        //Si alguno de los parámetros String es vacío o null.
+        if(codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty() || codigoCiudadDestino == null || codigoCiudadDestino.isEmpty() || codigoDeVuelo == null || codigoDeVuelo.isEmpty()){
+            return Retorno.error2("Parametros invalidos");
+        }
+
+        //Busqueda de Ciudades
+        Ciudad ciudadOrigen = new Ciudad(codigoCiudadOrigen,"");//Creo una ciudad para poder buscar
+        ResultadoBusqueda<Ciudad> ciudadOrigenResultado = ciudades.buscarConComparaciones(ciudadOrigen);
+
+        Ciudad ciudadDestino = new Ciudad(codigoCiudadDestino,"");//Creo una ciudad para poder buscar
+        ResultadoBusqueda<Ciudad> ciudadDestinoResultado = ciudades.buscarConComparaciones(ciudadDestino);
+
+        //Si no existe la ciudad de origen.
+        if(ciudadOrigenResultado.getDato() == null){
+            return Retorno.error3("No existe la ciudad de Origen");
+        }
+        //Si no existe la ciudad de destino.
+        if(ciudadDestinoResultado.getDato() == null){
+            return Retorno.error4("No existe la ciudad de Destino");
+        }
+
+        //Busco si existe la conexion
+        boolean existeConexion = false;
+        for(int i = 0; i < ciudadOrigenResultado.getDato().getConexiones().cantNodos() ; i++ ){
+            Ciudad ciudadAux = ciudadOrigenResultado.getDato().getConexiones().obtener(i);
+            if(ciudadAux.getCodigo().equals(ciudadDestinoResultado.getDato().getCodigo())){
+                existeConexion = true;
+            }
+        }
+
+        //Si no existe una conexión entre origen y destino.
+        if(!existeConexion){
+            return Retorno.error5("No existe una conexion entre el origen y el destino");
+        }
+
+        //Busco si ya existe el vuelo
+        boolean existeVuelo = false;
+        for(int i = 0; i < ciudadOrigenResultado.getDato().getVuelos().cantNodos() ; i++ ){
+            Vuelo vueloAux = ciudadOrigenResultado.getDato().getVuelos().obtener(i);
+            if(vueloAux.getCodigoDeVuelo().equals(codigoDeVuelo)){
+                existeVuelo = true;
+            }
+        }
+
+        //Si ya existe un vuelo con ese código en esa conexión.
+        if(existeVuelo){
+            return Retorno.error6("Ya existe un vuelo con ese codigo en esa conexion");
+        }
+        ciudadOrigenResultado.getDato().getVuelos().insertar(new Vuelo(codigoDeVuelo,combustible,minutos,costoEnDolares,tipoDeVuelo));
+
+        return Retorno.ok();
     }
 
     @Override

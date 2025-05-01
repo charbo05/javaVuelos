@@ -12,9 +12,11 @@ public class Ciudad implements Comparable<Ciudad>  {
     private ListaImpl<Ciudad> conexiones;
     private ListaImpl<Vuelo> vuelos;
 
-    public Ciudad(String nombre, String codigo) {
+    public Ciudad(String nombre, String codigo /*, ListaImpl<Ciudad> conexiones, ListaImpl<Vuelo> vuelos*/) {
         this.nombre = nombre;
         this.codigo = codigo;
+        this.conexiones = conexiones;
+        this.vuelos = vuelos;
     }
 
     public String getNombre() {

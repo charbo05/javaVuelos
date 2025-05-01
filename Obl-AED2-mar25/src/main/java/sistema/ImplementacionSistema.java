@@ -18,7 +18,7 @@ public class ImplementacionSistema implements Sistema  {
     private ListaImpl<Viajero> listaDeviajerosCi;
 
     // ABB para las ciudades
-    private ABB<Ciudad> ciudades;
+    private ListaImpl<Ciudad> ciudades;
 
     // ABB separados por categoría
     private ABB<Viajero> viajerosEstandar;
@@ -41,7 +41,8 @@ public class ImplementacionSistema implements Sistema  {
         // Comparadores personalizados
         viajerosPorCedula = new ABB<>(new Viajero.ComparadorPorCedula());
         viajerosPorCorreo = new ABB<>(new Viajero.ComparadorPorCorreo());
-        ciudades = new ABB<>(new Ciudad.ComparadorPorCodigo());
+
+        ciudades = new ListaImpl<>(new Ciudad.ComparadorPorCodigo());
 
         // ABB por categoría (ordenados por cédula para poder listar en orden creciente)
         viajerosEstandar = new ABB<>(new Viajero.ComparadorPorCedula());
@@ -344,7 +345,7 @@ public class ImplementacionSistema implements Sistema  {
     @Override
     public Retorno registrarCiudad(String codigo, String nombre) {
 
-        int cantidadCiudades = ciudades.cantNodos();
+        int cantidadCiudades = ciudades.largo();
         //Objeto busqueda
         Ciudad ciudad = new Ciudad(codigo, nombre);
 
@@ -359,7 +360,7 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error2("Codigo o nombre vacio o null");
         }
 
-        if (ciudades.buscar(ciudad) != null) {
+        if (ciudades.existe(ciudad)) {
 
             return Retorno.error3("Ya existe una ciudad registrada con ese codigo. Intenta nuevamente");
         }
@@ -397,17 +398,17 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error3("No existe la ciudad de Destino");
         }
 
-        //Busco si ya existe la conexion
-        boolean existeConexion = false;
-        for(int i = 0; i < ciudadOrigenResultado.getDato().getConexiones().cantNodos() ; i++ ){
-            Ciudad ciudadAux = ciudadOrigenResultado.getDato().getConexiones().obtener(i);
-            if(ciudadAux.getCodigo().equals(ciudadDestinoResultado.getDato().getCodigo())){
-                existeConexion = true;
-            }
-        }
+//        //Busco si ya existe la conexion
+//        boolean existeConexion = false;
+//        for(int i = 0; i < ciudadOrigenResultado.getDato().getConexiones().cantNodos() ; i++ ){
+//            Ciudad ciudadAux = ciudadOrigenResultado.getDato().getConexiones().obtener(i);
+//            if(ciudadAux.getCodigo().equals(ciudadDestinoResultado.getDato().getCodigo())){
+//                existeConexion = true;
+//            }
+//        }
 
         //Si ya existe una conexión entre el origen y el destino.
-        if(existeConexion){
+        if(ciudades.buscarConexion(ciudadOrigenResultado.getDato(), ciudadDestinoResultado.getDato())){
             return Retorno.error4("Ya existe esa conexion");
         }
 
@@ -415,6 +416,8 @@ public class ImplementacionSistema implements Sistema  {
 
         return Retorno.ok();
     }
+
+    //-----------------------------------------------------------------------------------
 
     @Override
     public Retorno registrarVuelo(String codigoCiudadOrigen, String codigoCiudadDestino, String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
@@ -445,31 +448,31 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error4("No existe la ciudad de Destino");
         }
 
-        //Busco si existe la conexion
-        boolean existeConexion = false;
-        for(int i = 0; i < ciudadOrigenResultado.getDato().getConexiones().cantNodos() ; i++ ){
-            Ciudad ciudadAux = ciudadOrigenResultado.getDato().getConexiones().obtener(i);
-            if(ciudadAux.getCodigo().equals(ciudadDestinoResultado.getDato().getCodigo())){
-                existeConexion = true;
-            }
-        }
+//        //Busco si existe la conexion
+//        boolean existeConexion = false;
+//        for(int i = 0; i < ciudadOrigenResultado.getDato().getConexiones().cantNodos() ; i++ ){
+//            Ciudad ciudadAux = ciudadOrigenResultado.getDato().getConexiones().obtener(i);
+//            if(ciudadAux.getCodigo().equals(ciudadDestinoResultado.getDato().getCodigo())){
+//                existeConexion = true;
+//            }
+//        }
 
         //Si no existe una conexión entre origen y destino.
-        if(!existeConexion){
+        if(ciudades.buscarConexion( ciudadOrigenResultado.getDato(), ciudadDestinoResultado.getDato())){
             return Retorno.error5("No existe una conexion entre el origen y el destino");
         }
 
-        //Busco si ya existe el vuelo
-        boolean existeVuelo = false;
-        for(int i = 0; i < ciudadOrigenResultado.getDato().getVuelos().cantNodos() ; i++ ){
-            Vuelo vueloAux = ciudadOrigenResultado.getDato().getVuelos().obtener(i);
-            if(vueloAux.getCodigoDeVuelo().equals(codigoDeVuelo)){
-                existeVuelo = true;
-            }
-        }
+//        //Busco si ya existe el vuelo
+//        boolean existeVuelo = false;
+//        for(int i = 0; i < ciudadOrigenResultado.getDato().getVuelos().cantNodos() ; i++ ){
+//            Vuelo vueloAux = ciudadOrigenResultado.getDato().getVuelos().obtener(i);
+//            if(vueloAux.getCodigoDeVuelo().equals(codigoDeVuelo)){
+//                existeVuelo = true;
+//            }
+//        }
 
         //Si ya existe un vuelo con ese código en esa conexión.
-        if(existeVuelo){
+        if(v){
             return Retorno.error6("Ya existe un vuelo con ese codigo en esa conexion");
         }
         ciudadOrigenResultado.getDato().getVuelos().insertar(new Vuelo(codigoDeVuelo,combustible,minutos,costoEnDolares,tipoDeVuelo));

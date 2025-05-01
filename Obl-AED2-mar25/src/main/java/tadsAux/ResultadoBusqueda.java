@@ -13,7 +13,14 @@ public class ResultadoBusqueda<T> {
         return dato;
     }
 
+    public T setDato(T dato) { return dato;}
+
     public int getComparaciones() {
         return comparaciones;
     }
+
+    public int setComparaciones() { return comparaciones;}
+
+
+
 }

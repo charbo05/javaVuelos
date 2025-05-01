@@ -1,5 +1,6 @@
 package tadsAux;
 
+import dominio.Ciudad;
 import interfaz.ILista;
 
 import java.util.Comparator;
@@ -9,10 +10,27 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
 
     protected NodoLista<T> inicio;
     protected int largo;
+    private Comparator<T> comparador;
 
     public ListaImpl() {
         this.inicio = null;
         this.largo = 0;
+        this.comparador = null;
+    }
+
+
+
+    public ListaImpl(Comparator<T> comparador) {
+        this.comparador = comparador;
+    }
+
+
+
+    private int comparar(T a, T b) {
+        if (comparador != null)
+            return comparador.compare(a, b);
+        else
+            return ((Comparable<T>) a).compareTo(b);
     }
 
     @Override
@@ -198,6 +216,59 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
             current = next;
         }
         inicio = aux;
+    }
+
+    public boolean buscarConexion(Ciudad ciudadA, Ciudad ciudadB) {
+
+        if (ciudadA == null || ciudadB == null) {
+            return false;
+        }
+
+        NodoLista<T> aux = inicio;
+        while (aux != null) {
+            if (((Ciudad) aux.getDato()).getCodigo().equals(ciudadB.getCodigo())) {
+                return true;
+            }
+            aux = aux.getSig();
+        }
+        return false;
+    }
+
+    public ResultadoBusqueda<T> buscarConComparaciones(T dato) {
+        // Inicializar un contador para las comparaciones.
+        int comparaciones = 0;
+
+        // Crear el resultado de la busqueda
+        ResultadoBusqueda<T> resultado = new ResultadoBusqueda<T>( dato, comparaciones );
+
+        // Si la lista esta vacia retorno el resultado.
+        if(inicio == null){
+            //resultado.setComparaciones();
+            return resultado;
+        }
+
+        // Empezar la busqueda desde el primer nodo.
+        NodoLista<T> nodoActual = inicio;
+
+        // Iterar a través de la lista.
+        while (nodoActual != null) {
+            // Incrementar el contador de comparaciones.
+            comparaciones++;
+
+            // Comparar el dato actual con el dato buscado
+            if (nodoActual.dato.equals(dato)) {
+                // Si son iguales, se encontro el dato.
+                resultado.getDato();
+                resultado.getComparaciones();
+                return resultado;
+            }
+            // Moverse al siguiente nodo.
+            nodoActual = nodoActual.sig;
+        }
+
+        // Si no se encontró el dato en toda la lista.
+        resultado.getComparaciones();
+        return resultado;
     }
 
 

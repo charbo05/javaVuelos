@@ -1,8 +1,8 @@
 package tadsAux;
 
 public class ResultadoBusqueda<T> {
-    private final T dato;
-    private final int comparaciones;
+    private T dato;
+    private int comparaciones;
 
     public ResultadoBusqueda(T dato, int comparaciones) {
         this.dato = dato;
@@ -13,14 +13,17 @@ public class ResultadoBusqueda<T> {
         return dato;
     }
 
-    public T setDato(T dato) { return dato;}
+    public void setDato(T dato) {
+        this.dato = dato;
+    }
 
     public int getComparaciones() {
         return comparaciones;
     }
 
-    public int setComparaciones() { return comparaciones;}
+    public void setComparaciones(int comparaciones) {
+        this.comparaciones = comparaciones;
 
-
+    }
 
 }

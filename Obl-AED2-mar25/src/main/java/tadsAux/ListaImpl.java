@@ -235,41 +235,28 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
     }
 
     public ResultadoBusqueda<T> buscarConComparaciones(T dato) {
-        // Inicializar un contador para las comparaciones.
         int comparaciones = 0;
+        ResultadoBusqueda<T> resultado = new ResultadoBusqueda<>(null, 0); // Inicialmente null
 
-        // Crear el resultado de la busqueda
-        ResultadoBusqueda<T> resultado = new ResultadoBusqueda<T>( dato, comparaciones );
-
-        // Si la lista esta vacia retorno el resultado.
-        if(inicio == null){
-            //resultado.setComparaciones();
-            return resultado;
-        }
-
-        // Empezar la busqueda desde el primer nodo.
         NodoLista<T> nodoActual = inicio;
 
-        // Iterar a través de la lista.
         while (nodoActual != null) {
-            // Incrementar el contador de comparaciones.
             comparaciones++;
 
-            // Comparar el dato actual con el dato buscado
             if (nodoActual.dato.equals(dato)) {
-                // Si son iguales, se encontro el dato.
-                resultado.getDato();
-                resultado.getComparaciones();
+                resultado.setDato(nodoActual.dato); // Se encontró el dato real de la lista
+                resultado.setComparaciones(comparaciones);
                 return resultado;
             }
-            // Moverse al siguiente nodo.
+
             nodoActual = nodoActual.sig;
         }
 
-        // Si no se encontró el dato en toda la lista.
-        resultado.getComparaciones();
+        // No se encontró
+        resultado.setComparaciones(comparaciones);
         return resultado;
     }
+
 
 
 

@@ -218,21 +218,21 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
         inicio = aux;
     }
 
-    public boolean buscarConexion(Ciudad ciudadA, Ciudad ciudadB) {
+//    public boolean buscarConexion(Ciudad ciudadA, Ciudad ciudadB) {
+//        if (ciudadA == null || ciudadB == null) {
+//            return false;
+//        }
+//
+//        NodoLista<T> aux = inicio;
+//        while (aux != null) {
+//            if (aux.getDato().equals(ciudadB)) {
+//                return true;
+//            }
+//            aux = aux.getSig();
+//        }
+//        return false;
+//    }
 
-        if (ciudadA == null || ciudadB == null) {
-            return false;
-        }
-
-        NodoLista<T> aux = inicio;
-        while (aux != null) {
-            if (((Ciudad) aux.getDato()).getCodigo().equals(ciudadB.getCodigo())) {
-                return true;
-            }
-            aux = aux.getSig();
-        }
-        return false;
-    }
 
     public ResultadoBusqueda<T> buscarConComparaciones(T dato) {
         int comparaciones = 0;
@@ -256,6 +256,18 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
         resultado.setComparaciones(comparaciones);
         return resultado;
     }
+
+    public boolean contiene(T dato) {
+        NodoLista<T> aux = inicio;
+        while (aux != null) {
+            if (aux.getDato().equals(dato)) {
+                return true;
+            }
+            aux = aux.getSig();
+        }
+        return false;
+    }
+
 
 
 

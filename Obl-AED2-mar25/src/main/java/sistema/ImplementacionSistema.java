@@ -373,6 +373,8 @@ public class ImplementacionSistema implements Sistema  {
         return Retorno.ok();
     }
 
+
+
     @Override
     public Retorno registrarConexion(String codigoCiudadOrigen, String codigoCiudadDestino) {
 
@@ -402,7 +404,7 @@ public class ImplementacionSistema implements Sistema  {
 
 
         //Si ya existe una conexión entre el origen y el destino.
-        if(ciudades.buscarConexion(ciudadOrigenResultado.getDato(), ciudadDestinoResultado.getDato())){
+        if (ciudadOrigenResultado.getDato().getConexiones().contiene(ciudadDestinoResultado.getDato())) {
             return Retorno.error4("Ya existe esa conexion");
         }
 
@@ -444,9 +446,9 @@ public class ImplementacionSistema implements Sistema  {
 
 
 
-        //Si no existe una conexión entre origen y destino.
-        if(ciudades.buscarConexion( ciudadOrigenResultado.getDato(), ciudadDestinoResultado.getDato())){
-            return Retorno.error5("No existe una conexion entre el origen y el destino");
+        //Si ya existe una conexión entre el origen y el destino.
+        if (ciudadOrigenResultado.getDato().getConexiones().contiene(ciudadDestinoResultado.getDato())) {
+            return Retorno.error4("Ya existe esa conexion");
         }
 
 

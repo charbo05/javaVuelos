@@ -10,8 +10,9 @@ public class Ciudad implements Comparable<Ciudad>  {
     private String nombre;
 
 
-    private ListaImpl<Ciudad> conexiones;
+    private ListaImpl<Ciudad> conexiones = new ListaImpl<>();
     private ListaImpl<Vuelo> vuelos;
+
 
     public Ciudad(String codigo , String nombre ) {
 
@@ -72,6 +73,14 @@ public class Ciudad implements Comparable<Ciudad>  {
         public int compare(Ciudad c1, Ciudad c2) {
             return c1.getCodigo().compareTo(c2.getCodigo());
         }
+    }
+
+    public boolean buscarConexion(Ciudad ciudadA, Ciudad ciudadB) {
+        if (ciudadA == null || ciudadB == null) {
+            return false;
+        }
+
+        return ciudadA.getConexiones().contiene(ciudadB);
     }
 
 }

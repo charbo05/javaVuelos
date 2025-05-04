@@ -59,8 +59,8 @@ public class Test11RegistrarConexion {
 
     @Test
     public void testRegistrarConexionOk() {
-        s.registrarCiudad("BSS", "Montevideo");
-        s.registrarCiudad("MCJ", "New York");
+        s.registrarCiudad("BSS", "Barcelona");
+        s.registrarCiudad("MCJ", "Manchester");
 
       Retorno r =  s.registrarConexion("BSS", "MCJ");
 

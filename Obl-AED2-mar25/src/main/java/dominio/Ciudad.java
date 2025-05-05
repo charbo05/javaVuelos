@@ -11,7 +11,7 @@ public class Ciudad implements Comparable<Ciudad>  {
 
 
     private ListaImpl<Ciudad> conexiones = new ListaImpl<>();
-    private ListaImpl<Vuelo> vuelos;
+    private ListaImpl<Vuelo> vuelos = new ListaImpl<>();
 
 
     public Ciudad(String codigo , String nombre ) {

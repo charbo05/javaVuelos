@@ -451,13 +451,14 @@ public class ImplementacionSistema implements Sistema  {
             return Retorno.error4("Ya existe esa conexion");
         }
 
-
+        //creo al vuelo nuevo
+        Vuelo vuelo = new Vuelo(codigoDeVuelo,combustible,minutos,costoEnDolares,tipoDeVuelo);
 
         //Si ya existe un vuelo con ese código en esa conexión.
-        if(ciudadOrigen.getVuelos().existe(new Vuelo(codigoDeVuelo,combustible,minutos,costoEnDolares,tipoDeVuelo))){
+        if(ciudadOrigenResultado.getDato().getVuelos().contiene(vuelo)){
             return Retorno.error6("Ya existe un vuelo con ese codigo en esa conexion");
         }
-        ciudadOrigenResultado.getDato().getVuelos().insertar(new Vuelo(codigoDeVuelo,combustible,minutos,costoEnDolares,tipoDeVuelo));
+        ciudadOrigenResultado.getDato().getVuelos().insertar(vuelo);
 
         return Retorno.ok();
     }

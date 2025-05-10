@@ -458,6 +458,7 @@ public class ImplementacionSistema implements Sistema  {
         if(ciudadOrigenResultado.getDato().getVuelos().contiene(vuelo)){
             return Retorno.error6("Ya existe un vuelo con ese codigo en esa conexion");
         }
+        //agregamos el vuelo
         ciudadOrigenResultado.getDato().getVuelos().insertar(vuelo);
 
         return Retorno.ok();
@@ -465,6 +466,45 @@ public class ImplementacionSistema implements Sistema  {
 
     @Override
     public Retorno actualizarVuelo(String codigoCiudadOrigen, String codigoCiudadDestino, String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
+
+        //Si alguno de los parámetros double es menor o igual a 0.
+        if(combustible <=0 || minutos <=0 || costoEnDolares <=0){
+            return Retorno.error1("Los parametros double no pueden ser menores o iguales a cero");
+
+        }
+        //Si alguno de los parámetros String es vacío o null.
+        if(     codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty() ||
+                codigoCiudadDestino == null || codigoCiudadDestino.isEmpty() ||
+                codigoDeVuelo == null || codigoDeVuelo.isEmpty()){
+            return Retorno.error2("Parametros invalidos");
+
+        }
+
+        //Verificamos que la ciudad origen exista
+        Ciudad ciudadOrigen = new Ciudad(codigoCiudadOrigen,"");
+        ResultadoBusqueda<Ciudad> ciudadOrigenResultado = ciudades.buscarConComparaciones(ciudadOrigen);
+        if (ciudadOrigenResultado.getDato() == null) {
+            return Retorno.error3("La ciudad origen no existe");
+        }
+
+        //Verificamos que la ciudad destino exista
+        Ciudad ciudadDestino = new Ciudad(codigoCiudadDestino,"");
+        ResultadoBusqueda<Ciudad> ciudadDestinoResultado = ciudades.buscarConComparaciones(ciudadDestino);
+        if(ciudadDestinoResultado.getDato() == null){
+            return Retorno.error4("La ciudad de destino no existe");
+        }
+
+        if (!ciudades.buscarConexion(ciudadOrigenResultado.getDato(), ciudadDestinoResultado.getDato())) {
+            return Retorno.error5("La conexion entre las ciudades no existe");
+        }
+
+
+        //Creo un vuelo para poder buscarlo
+        Vuelo vuelo = new Vuelo(codigoDeVuelo,combustible,minutos,costoEnDolares,tipoDeVuelo);
+        if(ciudadOrigen.getVuelos().contiene(vuelo)){
+
+        }
+
         return Retorno.noImplementada();
     }
 

@@ -19,11 +19,9 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
     }
 
 
-
     public ListaImpl(Comparator<T> comparador) {
         this.comparador = comparador;
     }
-
 
 
     private int comparar(T a, T b) {
@@ -258,18 +256,23 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
     }
 
     public boolean contiene(T dato) {
+        boolean existe = false;
+
         NodoLista<T> aux = inicio;
         while (aux != null) {
             if (aux.getDato().equals(dato)) {
-                return true;
+                existe = true;
             }
             aux = aux.getSig();
         }
-        return false;
+        return existe;
+    }
+
+
+
     }
 
 
 
 
 
-}

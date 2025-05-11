@@ -4,13 +4,17 @@ import interfaz.TipoVuelo;
 
 public class Vuelo implements Comparable<Vuelo> {
     private String codigoDeVuelo;
+    private Ciudad origen;
+    private Ciudad destino;
     private double combustible;
     private double minutos;
     private double costoEnDolares;
     private TipoVuelo tipoDeVuelo;
 
-    public Vuelo(String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
+    public Vuelo(String codigoDeVuelo, Ciudad origen, Ciudad destino, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
         this.codigoDeVuelo = codigoDeVuelo;
+        this.origen = origen;
+        this.destino = destino;
         this.combustible = combustible;
         this.minutos = minutos;
         this.costoEnDolares = costoEnDolares;
@@ -23,6 +27,22 @@ public class Vuelo implements Comparable<Vuelo> {
 
     public void setCodigoDeVuelo(String codigoDeVuelo) {
         this.codigoDeVuelo = codigoDeVuelo;
+    }
+
+    public Ciudad getOrigen() {
+        return origen;
+    }
+
+    public Ciudad getDestino() {
+        return destino;
+    }
+
+    public void setOrigen(Ciudad origen) {
+        this.origen = origen;
+    }
+
+    public void setDestino(Ciudad destino) {
+        this.destino = destino;
     }
 
     public double getCombustible() {

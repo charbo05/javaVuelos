@@ -268,9 +268,50 @@ public class ListaImpl<T extends Comparable<T>> implements ILista<T> {
         return existe;
     }
 
+    public int cantNodos(){
 
-
+        int cant=0;
+        NodoLista<T> aux=inicio;
+        while(aux!=null){
+            cant++;
+            aux=aux.getSig();
+        }
+        return cant;
     }
+
+
+    public T obtener(int pos) {
+        if (pos < 0 || pos >= cantNodos()) {
+            throw new IndexOutOfBoundsException("Posición inválida");
+        }
+
+        NodoLista<T> actual = inicio;
+        int contador = 0;
+        while (actual != null) {
+            if (contador == pos) {
+                return actual.getDato();
+            }
+            actual = actual.sig;
+            contador++;
+        }
+
+        return null; // Solo por sintaxis, nunca debería llegar acá si las condiciones están bien
+    }
+
+    public boolean contieneElemento(T elemento) {
+        for (int i = 0; i < cantNodos(); i++) {
+            if (obtener(i).equals(elemento)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+}
 
 
 

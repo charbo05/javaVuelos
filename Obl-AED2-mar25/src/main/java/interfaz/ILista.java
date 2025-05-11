@@ -1,5 +1,7 @@
 package interfaz;
 
+import dominio.Ciudad;
+
 public interface ILista <T extends Comparable <T>> {
     void insertar(T dato);
     void borrar(T dato);
@@ -9,6 +11,7 @@ public interface ILista <T extends Comparable <T>> {
     boolean esVacia();
     boolean esLlena();
     void imprimirDatos();
+
 
 
 }

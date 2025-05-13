@@ -432,7 +432,7 @@ public class ImplementacionSistema implements Sistema  {
                 || codigoDeVuelo == null || codigoDeVuelo.isEmpty())
             return Retorno.error2(" string vacio o null ");
 
-        Vuelo existente = origen.obtenerVuelo(codigoDeVuelo);
+
 
         if (origen == null)
             return Retorno.error3("No existe la ciudad de origen ");
@@ -440,11 +440,13 @@ public class ImplementacionSistema implements Sistema  {
         if(destino == null)
             return Retorno.error4("No existe la ciudad de destino ");
 
-        if(origen.getConexiones().contieneElemento(destino) == false)
-            return Retorno.error4("No existe conexion entre las dos ciuddes");
+        if(!origen.getConexiones().contieneElemento(destino))
+            return Retorno.error5("No existe conexion entre las dos ciudades");
+
+        Vuelo existente = origen.obtenerVuelo(codigoDeVuelo);
 
         if(existente != null)
-            return Retorno.error5("Ya existe un vuelo con ese codigo");
+            return Retorno.error6("Ya existe un vuelo con ese codigo");
 
         Vuelo nuevo = new Vuelo(codigoDeVuelo, origen, destino, combustible, minutos, costoEnDolares, tipoDeVuelo);
         origen.agregarVuelo(nuevo);

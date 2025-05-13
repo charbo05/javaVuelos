@@ -60,8 +60,10 @@ public class Test12RegistrarVuelo {
     public void testRegistrarVueloCiudadOrigenNoExiste() {
         s.registrarCiudad("NYC", "New York");
 
+
         Retorno r = s.registrarVuelo("MVD", "NYC", "AA123", 50, 120, 500, TipoVuelo.PRIVADO);
         assertEquals(Retorno.Resultado.ERROR_3, r.getResultado());
+
     }
 
     @Test
@@ -73,19 +75,20 @@ public class Test12RegistrarVuelo {
     }
 
     @Test
-    public void testRegistrarVueloYaExisteConexion() {
+    public void testRegistrarVueloNoExisteConexion() {
         s.registrarCiudad("MVD", "Montevideo");
         s.registrarCiudad("NYC", "New York");
-        s.registrarConexion("MVD", "NYC"); // crea conexión directa
+
 
         Retorno r = s.registrarVuelo("MVD", "NYC", "AA123", 50, 120, 500, TipoVuelo.PRIVADO);
-        assertEquals(Retorno.Resultado.ERROR_4, r.getResultado());
+        assertEquals(Retorno.Resultado.ERROR_5, r.getResultado());
     }
 
     @Test
     public void testRegistrarVueloCodigoRepetidoEnMismaConexion() {
         s.registrarCiudad("MVD", "Montevideo");
         s.registrarCiudad("NYC", "New York");
+        s.registrarConexion("MVD", "NYC");
 
         // Asegúrate de que no hay conexión previa, para que el código pase esa validación
         Retorno r1 = s.registrarVuelo("MVD", "NYC", "AA123", 50, 120, 500, TipoVuelo.PRIVADO);
@@ -100,6 +103,7 @@ public class Test12RegistrarVuelo {
     public void testRegistrarVueloCorrectamente() {
         s.registrarCiudad("MVD", "Montevideo");
         s.registrarCiudad("NYC", "New York");
+        s.registrarConexion("MVD", "NYC");//Registro la conexion para poder registrar luego el vuelo
 
         Retorno r = s.registrarVuelo("MVD", "NYC", "AA123", 50, 120, 500, TipoVuelo.PRIVADO);
         assertEquals(Retorno.Resultado.OK, r.getResultado());

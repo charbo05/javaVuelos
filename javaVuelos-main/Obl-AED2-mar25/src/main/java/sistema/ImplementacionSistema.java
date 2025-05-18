@@ -1,4 +1,5 @@
 package sistema;
+import dominio.Conexion;
 import tadsAux.ABB;
 import tadsAux.GrafoCiudades;
 import tadsAux.ListaImpl;
@@ -405,12 +406,14 @@ public class ImplementacionSistema implements Sistema  {
         if (destino == null) return Retorno.error3("No existe la ciudad de Destino");
 
         // Validar que no exista la conexión ya
-        if (origen.getConexiones().contieneElemento(destino)) {
+
+
+        if (grafoCiudades.existeConexion(origen, destino)) {
             return Retorno.error4("Ya existe esa conexión");
         }
 
         // Insertar la conexión (una arista dirigida de origen -> destino)
-        origen.getConexiones().insertar(destino);
+        grafoCiudades.agregarConexion(origen, destino);
 
         return Retorno.ok();
     }

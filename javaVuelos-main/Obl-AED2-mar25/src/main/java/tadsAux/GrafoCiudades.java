@@ -76,6 +76,12 @@ public class GrafoCiudades {
         }
         }
 
+        public boolean existeConexion(Ciudad origen, Ciudad destino){
+        int posInicio = obtenerPos(origen);
+            int posfin = obtenerPos(destino);
+            return conexiones[posInicio][posfin].isExiste();
+        }
+
 
         public void borrarConexion(Ciudad origen, Ciudad destino) {
         int posInicio = obtenerPos(origen);
@@ -121,15 +127,11 @@ public class GrafoCiudades {
 //        return null;
 //    }
 //
-//    public boolean existeConexion(Ciudad origen, Ciudad destino) {
-//        return origen.tieneConexionCon(destino);
-//    }
-//
-//    public boolean buscarConexion(String codigoOrigen, String codigoDestino) {
-//        Ciudad origen = buscarCiudad(codigoOrigen);
-//        Ciudad destino = buscarCiudad(codigoDestino);
-//        return (origen != null && destino != null && origen.tieneConexionCon(destino));
-//    }
+
+
+
+
+
 
     private int obtenerPosLibre() {
         for (int i = 0; i < ciudades.length; i++) {

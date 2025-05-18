@@ -42,15 +42,8 @@ public class Ciudad implements Comparable<Ciudad> {
 //        }
 //        return null;
 //    }
-//
-//    public boolean tieneConexionCon(Ciudad destino) {
-//        for (int i = 0; i < conexiones.cantNodos(); i++) {
-//            if (conexiones.obtener(i).equals(destino)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+
+
 
     @Override
     public String toString() {

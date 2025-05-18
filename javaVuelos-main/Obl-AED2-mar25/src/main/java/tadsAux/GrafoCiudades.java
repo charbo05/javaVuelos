@@ -116,17 +116,19 @@ public class GrafoCiudades {
         }
 
 
-//
-//    public Ciudad buscarCiudad(String codigo) {
-//        for (int i = 0; i < ciudades.cantNodos(); i++) {
-//            Ciudad c = ciudades.obtener(i);
-//            if (c.getCodigo().equals(codigo)) {
-//                return c;
-//            }
-//        }
-//        return null;
-//    }
-//
+
+    public Ciudad buscarCiudad(String codigoCiudad) {
+       Ciudad ciudadAux = new Ciudad(codigoCiudad, "");
+        int pos = obtenerPos(ciudadAux);
+
+        for (int i = 0; i < ciudades.length; i++) {
+            if (ciudades[i] != null && ciudades[pos].equals(ciudadAux)) {
+                return ciudadAux;
+            }
+        }
+        return null;
+    }
+
 
 
 

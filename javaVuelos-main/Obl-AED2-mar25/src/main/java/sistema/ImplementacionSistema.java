@@ -443,10 +443,10 @@ public class ImplementacionSistema implements Sistema  {
         if(destino == null)
             return Retorno.error4("No existe la ciudad de destino ");
 
-        if(!origen.getConexiones().contieneElemento(destino))
+        if(!grafoCiudades.existeConexion(origen, destino) )
             return Retorno.error5("No existe conexion entre las dos ciudades");
 
-        Vuelo existente = origen.obtenerVuelo(codigoDeVuelo);
+        Vuelo existente = grafoCiudades.;
 
         if(existente != null)
             return Retorno.error6("Ya existe un vuelo con ese codigo");

@@ -76,4 +76,6 @@ public class Vuelo implements Comparable<Vuelo> {
         Vuelo vuelo = (Vuelo) o;
         return codigoDeVuelo.equals(vuelo.codigoDeVuelo); // asumimos que el código es único
     }
+
+
 }

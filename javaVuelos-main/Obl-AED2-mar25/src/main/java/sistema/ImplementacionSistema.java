@@ -19,6 +19,9 @@ public class ImplementacionSistema implements Sistema  {
 
     private GrafoCiudades grafoCiudades;
 
+  //  private ListaImpl<Vuelo> vuelos;
+    private Conexion conexion;
+
     private ListaImpl<Viajero> listaDeviajerosCi;
 
     // ABB para las ciudades
@@ -55,6 +58,9 @@ public class ImplementacionSistema implements Sistema  {
         viajerosPlatino = new ABB<>(new Viajero.ComparadorPorCedula());
 
         this.grafoCiudades = new GrafoCiudades(maxCiudades, true);
+
+        this.conexion = new Conexion();
+       // this.vuelos = new ListaImpl<>();
 
         listaDeviajerosCi = new ListaImpl<>();
 
@@ -423,40 +429,46 @@ public class ImplementacionSistema implements Sistema  {
     @Override
     public Retorno registrarVuelo(String codigoCiudadOrigen, String codigoCiudadDestino, String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
 
-        Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
-        Ciudad destino = grafoCiudades.buscarCiudad(codigoCiudadDestino);
+        if (combustible <= 0 || minutos <= 0 || costoEnDolares <= 0)
+            return Retorno.error1("Los parámetros double no pueden ser menores o iguales a cero");
 
-        //Si alguno de los parámetros double es menor o igual a 0.
-        if(combustible <= 0 || minutos <= 0 || costoEnDolares <= 0){
-            return Retorno.error1("Los parametros double no pueden ser menores o iguales a cero");
-        }
-        if (    codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty()
+        if (codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty()
                 || codigoCiudadDestino == null || codigoCiudadDestino.isEmpty()
                 || codigoDeVuelo == null || codigoDeVuelo.isEmpty())
-            return Retorno.error2(" string vacio o null ");
+            return Retorno.error2("String vacío o null");
 
+//        Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
+//        Ciudad destino = grafoCiudades.buscarCiudad(codigoCiudadDestino);
 
+        // Crear objetos temporales para la búsqueda
+        Ciudad ciudadOrigenTmp = new Ciudad(codigoCiudadOrigen, "");
+        Ciudad ciudadDestinoTmp = new Ciudad(codigoCiudadDestino, "");
+
+        // Buscar las ciudades en el ABB
+        ResultadoBusqueda<Ciudad> origenResultado = ciudades.buscarConComparaciones(ciudadOrigenTmp);
+        ResultadoBusqueda<Ciudad> destinoResultado = ciudades.buscarConComparaciones(ciudadDestinoTmp);
+
+        Ciudad origen = origenResultado.getDato();
+        Ciudad destino = destinoResultado.getDato();
 
         if (origen == null)
-            return Retorno.error3("No existe la ciudad de origen ");
+            return Retorno.error3("No existe la ciudad de origen");
 
-        if(destino == null)
-            return Retorno.error4("No existe la ciudad de destino ");
+        if (destino == null)
+            return Retorno.error4("No existe la ciudad de destino");
 
-        if(!grafoCiudades.existeConexion(origen, destino) )
-            return Retorno.error5("No existe conexion entre las dos ciudades");
+        if (!grafoCiudades.existeConexion(origen, destino))
+            return Retorno.error5("No existe conexión entre las dos ciudades");
 
-        Vuelo existente = grafoCiudades.;
+        Conexion conexion = grafoCiudades.obtenerConexion(origen, destino);
+        if (conexion.ExisteVuelo(codigoDeVuelo))
+            return Retorno.error6("Ya existe un vuelo con ese código en esta conexión");
 
-        if(existente != null)
-            return Retorno.error6("Ya existe un vuelo con ese codigo");
-
-        Vuelo nuevo = new Vuelo(codigoDeVuelo, origen, destino, combustible, minutos, costoEnDolares, tipoDeVuelo);
-        origen.agregarVuelo(nuevo);
+        Vuelo nuevo = new Vuelo(codigoDeVuelo, combustible, minutos, costoEnDolares, tipoDeVuelo);
+        conexion.getVuelos().insertar(nuevo); // Insertamos el vuelo en la lista de vuelos que tengo en conexion
 
         return Retorno.ok();
     }
-
 
 
 
@@ -477,8 +489,11 @@ public class ImplementacionSistema implements Sistema  {
 
         if (!grafoCiudades.existeConexion(origen, destino)) return Retorno.error5("No hay conexion");
 
-        Vuelo vuelo = origen.obtenerVuelo(codVuelo);
-        if (vuelo == null) return Retorno.error6("No existe el vuelo");
+        Conexion conexion = grafoCiudades.obtenerConexion(origen, destino);
+
+        if (conexion.ExisteVuelo(codVuelo)) return Retorno.error6("No existe el vuelo");
+
+        Vuelo vuelo = conexion.obtenerVuelo(codVuelo);
 
         vuelo.setCombustible(combustible);
         vuelo.setMinutos(minutos);

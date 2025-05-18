@@ -37,6 +37,7 @@ public class Conexion {
         return destino;
     }
 
+
     public boolean ExisteVuelo(String codigoVuelo) {
 
         for (int i = 0; i < vuelos.cantNodos(); i++) {
@@ -61,4 +62,25 @@ public class Conexion {
         }
     }
 
+    public void agregarVueloEnConexion(String codigoVuelo) {
+
+        if (this.ExisteVuelo(codigoVuelo)) {
+            System.out.println("Ya existe el vuelo con el codigo: " + codigoVuelo);
+            ;
+        } else {
+            Vuelo v = new Vuelo(codigoVuelo, 0, 0, 0, null);
+
+            vuelos.insertar(v);
+        }
+
+    }
+
+    public Vuelo obtenerVuelo(String codigoVuelo){
+        for(int i=0;i<vuelos.cantNodos();i++){
+            if(vuelos.obtener(i).getCodigoDeVuelo().equals(codigoVuelo)){
+                return vuelos.obtener(i);
+            }
+        }
+        return null;
+    }
 }

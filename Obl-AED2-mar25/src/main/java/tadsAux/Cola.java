@@ -1,140 +1,49 @@
 package tadsAux;
-
 import interfaz.ICola;
 
-public class Cola<T extends Comparable<T>> implements ICola<T> 
-{
-    private Nodo inicio;
-    private Nodo fin;
-    private int cantElementos;
+public class Cola<T> implements ICola<T> {
 
-    public Cola() {
-        inicio = null;
-        fin = null;
-        cantElementos = 0;
+    private NodoCola<T> inicio;
+    private NodoCola<T> fin;
+    private int largo;
+
+    public void encolar(T dato) {
+        if (this.inicio == null) {
+            inicio = new NodoCola<>(dato);
+            fin = inicio;
+        } else {
+            fin.sig = new NodoCola<>(dato);
+            fin = fin.sig;
+        }
+        this.largo++;
     }
 
-    
-    public boolean esVacia() {
-        return inicio == null ;
+    // Pre: !esVacia()
+    public T desencolar() {
+        T dato = this.inicio.dato;
+        inicio = inicio.sig;
+        this.largo--;
+        if (this.inicio == null) {
+            fin = null;
+        }
+        return dato;
     }
 
-    //innerClass
+    public boolean estaVacia() {
+        return this.largo == 0;
+    }
 
-     private class Nodo {
-        private T dato;
-        private Nodo izq;
-        private Nodo der;
+    private class NodoCola<Q> {
+        private final Q dato;
+        private NodoCola<Q> sig;
 
-        public Nodo(T dato) {
+        public NodoCola(Q dato) {
             this.dato = dato;
-        }
-
-        public T getDato() {
-            return dato;
-        }
-
-        public Nodo getIzq() {
-            return izq;
-        }
-
-        public Nodo getDer() {
-            return der;
         }
 
         @Override
         public String toString() {
-            return "Nodo{" + dato + '}';
+            return dato.toString();
         }
     }
-
-
-    @Override
-    public void encolar(T n) {
-        Nodo nuevo = new Nodo(n);
-        if (esVacia()) {
-            inicio = nuevo;
-            fin = nuevo;
-        } else {
-            fin.setSiguiente(nuevo);
-            fin = nuevo;
-        }
-        cantElementos++;
-    }
-
-    @Override
-    public void desencolar() {
-        if (!esVacia()) {
-            if (inicio.getSiguiente() == null) {
-                inicio = null;
-                fin = null;
-            } else {
-                NodoSE aBorrar = inicio;
-                inicio = inicio.getSiguiente();
-                aBorrar.setSiguiente(null);
-            }
-            cantElementos--;
-        }
-    }
-//
-//    @Override
-//    public NodoSE obtenerPrimerElemento() {
-//        if (!esVacia()) {
-//            return inicio;
-//        } else {
-//            return null;
-//        }
-//    }
-//    
-   
-
-
-
-    @Override
-    public void vaciar() {
-        inicio = null;
-        fin = null;
-        cantElementos = 0;
-    }
-
-    @Override
-    public void mostrar() {
-        if (!esVacia()) {
-            NodoSE aux = inicio;
-            while (aux != null) {
-                System.out.print(aux.getDato() + " ");
-                aux = aux.getSiguiente();
-            }
-            System.out.println();
-        } else {
-            System.out.println("Lista vacía.");
-        }
-
-    }
-
-    @Override
-    public int cantElementos() {
-        return cantElementos;
-    }
-
-    @Override
-    public boolean existeElemento(T x) {
-        boolean existe = false;
-        NodoSE aux = inicio;
-        while (aux != null && !existe) {
-            if (aux.getDato().equals(x)) {
-                existe = true;
-            }
-            aux = aux.getSiguiente();
-        }
-        return existe;
-    }
-
-    @Override
-    public boolean EsVacia() {
-        return inicio == null;
-    }
-   
 }
-
-

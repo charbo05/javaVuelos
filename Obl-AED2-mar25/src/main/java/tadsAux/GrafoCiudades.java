@@ -1,5 +1,8 @@
 package tadsAux;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dominio.Ciudad;
 import dominio.Conexion;
 import interfaz.ICola;
@@ -123,36 +126,29 @@ public class GrafoCiudades {
         }
 
 
-
-        public ListaImpl<Ciudad> obtenerCiudadesAlcanzables(String codigoCiudadOrigen, int cantidadDeEscalas) {
+public List<Ciudad> obtenerCiudadesAlcanzables(String codigoCiudadOrigen, int cantidadDeEscalas) {
     int posOrigen = obtenerPosPorCodigo(codigoCiudadOrigen);
-
-    if (posOrigen == -1)
-        return new ListaImpl<>(); // o lanzar excepción según tu diseño
-
     boolean[] visitado = new boolean[maxCiudades];
-    ListaImpl<Ciudad> alcanzables = new ListaImpl<>();
+    List<Ciudad> alcanzables = new ArrayList<>();
 
     ICola<NodoEscala> cola = new Cola<>();
     cola.encolar(new NodoEscala(posOrigen, 0));
+    visitado[posOrigen] = true;
 
     while (!cola.estaVacia()) {
-        NodoEscala actual = cola.desencolar();
+        NodoEscala actual = (NodoEscala) cola.desencolar();
         int pos = actual.posCiudad;
         int escalas = actual.escalas;
 
-        if (!visitado[pos]) {
-            visitado[pos] = true;
+        if (escalas > 0) {
+            alcanzables.add(ciudades[pos]);
+        }
 
-            if (escalas >= 0) {
-                alcanzables.insertar(ciudades[pos]);
-            }
-
-            if (escalas < cantidadDeEscalas) {
-                for (int i = 0; i < maxCiudades; i++) {
-                    if (conexiones[pos][i].isExiste() && !visitado[i]) {
-                        cola.encolar(new NodoEscala(i, escalas + 1));
-                    }
+        if (escalas < cantidadDeEscalas) {
+            for (int i = 0; i < maxCiudades; i++) {
+                if (conexiones[pos][i].isExiste() && !visitado[i]) {
+                    visitado[i] = true;
+                    cola.encolar(new NodoEscala(i, escalas + 1));
                 }
             }
         }
@@ -160,6 +156,7 @@ public class GrafoCiudades {
 
     return alcanzables;
 }
+
 
 //--------------------------------
 

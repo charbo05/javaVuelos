@@ -1,4 +1,5 @@
 package sistema;
+import dominio.Conexion;
 import tadsAux.ABB;
 import tadsAux.GrafoCiudades;
 import tadsAux.ListaImpl;
@@ -17,6 +18,9 @@ public class ImplementacionSistema implements Sistema  {
     private ABB<Viajero> viajerosPorCorreo;
 
     private GrafoCiudades grafoCiudades;
+
+  //  private ListaImpl<Vuelo> vuelos;
+    private Conexion conexion;
 
     private ListaImpl<Viajero> listaDeviajerosCi;
 
@@ -53,7 +57,10 @@ public class ImplementacionSistema implements Sistema  {
         viajerosFrecuente = new ABB<>(new Viajero.ComparadorPorCedula());
         viajerosPlatino = new ABB<>(new Viajero.ComparadorPorCedula());
 
-        this.grafoCiudades = new GrafoCiudades();
+        this.grafoCiudades = new GrafoCiudades(maxCiudades, true);
+
+        this.conexion = new Conexion();
+       // this.vuelos = new ListaImpl<>();
 
         listaDeviajerosCi = new ListaImpl<>();
 
@@ -405,12 +412,14 @@ public class ImplementacionSistema implements Sistema  {
         if (destino == null) return Retorno.error3("No existe la ciudad de Destino");
 
         // Validar que no exista la conexión ya
-        if (origen.getConexiones().contieneElemento(destino)) {
+
+
+        if (grafoCiudades.existeConexion(origen, destino)) {
             return Retorno.error4("Ya existe esa conexión");
         }
 
         // Insertar la conexión (una arista dirigida de origen -> destino)
-        origen.getConexiones().insertar(destino);
+        grafoCiudades.agregarConexion(origen, destino);
 
         return Retorno.ok();
     }
@@ -420,40 +429,46 @@ public class ImplementacionSistema implements Sistema  {
     @Override
     public Retorno registrarVuelo(String codigoCiudadOrigen, String codigoCiudadDestino, String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, TipoVuelo tipoDeVuelo) {
 
-        Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
-        Ciudad destino = grafoCiudades.buscarCiudad(codigoCiudadDestino);
+        if (combustible <= 0 || minutos <= 0 || costoEnDolares <= 0)
+            return Retorno.error1("Los parámetros double no pueden ser menores o iguales a cero");
 
-        //Si alguno de los parámetros double es menor o igual a 0.
-        if(combustible <= 0 || minutos <= 0 || costoEnDolares <= 0){
-            return Retorno.error1("Los parametros double no pueden ser menores o iguales a cero");
-        }
-        if (    codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty()
+        if (codigoCiudadOrigen == null || codigoCiudadOrigen.isEmpty()
                 || codigoCiudadDestino == null || codigoCiudadDestino.isEmpty()
                 || codigoDeVuelo == null || codigoDeVuelo.isEmpty())
-            return Retorno.error2(" string vacio o null ");
+            return Retorno.error2("String vacío o null");
 
+//        Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
+//        Ciudad destino = grafoCiudades.buscarCiudad(codigoCiudadDestino);
 
+        // Crear objetos temporales para la búsqueda
+        Ciudad ciudadOrigenTmp = new Ciudad(codigoCiudadOrigen, "");
+        Ciudad ciudadDestinoTmp = new Ciudad(codigoCiudadDestino, "");
+
+        // Buscar las ciudades en el ABB
+        ResultadoBusqueda<Ciudad> origenResultado = ciudades.buscarConComparaciones(ciudadOrigenTmp);
+        ResultadoBusqueda<Ciudad> destinoResultado = ciudades.buscarConComparaciones(ciudadDestinoTmp);
+
+        Ciudad origen = origenResultado.getDato();
+        Ciudad destino = destinoResultado.getDato();
 
         if (origen == null)
-            return Retorno.error3("No existe la ciudad de origen ");
+            return Retorno.error3("No existe la ciudad de origen");
 
-        if(destino == null)
-            return Retorno.error4("No existe la ciudad de destino ");
+        if (destino == null)
+            return Retorno.error4("No existe la ciudad de destino");
 
-        if(!origen.getConexiones().contieneElemento(destino))
-            return Retorno.error5("No existe conexion entre las dos ciudades");
+        if (!grafoCiudades.existeConexion(origen, destino))
+            return Retorno.error5("No existe conexión entre las dos ciudades");
 
-        Vuelo existente = origen.obtenerVuelo(codigoDeVuelo);
+        Conexion conexion = grafoCiudades.obtenerConexion(origen, destino);
+        if (conexion.ExisteVuelo(codigoDeVuelo))
+            return Retorno.error6("Ya existe un vuelo con ese código en esta conexión");
 
-        if(existente != null)
-            return Retorno.error6("Ya existe un vuelo con ese codigo");
-
-        Vuelo nuevo = new Vuelo(codigoDeVuelo, origen, destino, combustible, minutos, costoEnDolares, tipoDeVuelo);
-        origen.agregarVuelo(nuevo);
+        Vuelo nuevo = new Vuelo(codigoDeVuelo, combustible, minutos, costoEnDolares, tipoDeVuelo);
+        conexion.getVuelos().insertar(nuevo); // Insertamos el vuelo en la lista de vuelos que tengo en conexion
 
         return Retorno.ok();
     }
-
 
 
 
@@ -466,16 +481,30 @@ public class ImplementacionSistema implements Sistema  {
         if (codOrigen == null || codDestino == null || codVuelo == null ||
                 codOrigen.isEmpty() || codDestino.isEmpty() || codVuelo.isEmpty()) return Retorno.error2("Cadenas vacias");
 
-        Ciudad origen = grafoCiudades.buscarCiudad(codOrigen);
+        // Crear objetos temporales para la búsqueda
+        Ciudad ciudadOrigenTmp = new Ciudad(codOrigen, "");
+        Ciudad ciudadDestinoTmp = new Ciudad(codDestino, "");
+
+        // Buscar las ciudades en el ABB
+        ResultadoBusqueda<Ciudad> origenResultado = ciudades.buscarConComparaciones(ciudadOrigenTmp);
+        ResultadoBusqueda<Ciudad> destinoResultado = ciudades.buscarConComparaciones(ciudadDestinoTmp);
+
+        Ciudad origen = origenResultado.getDato();
+        Ciudad destino = destinoResultado.getDato();
+
+
         if (origen == null) return Retorno.error3("Ciudad origen no existe");
 
-        Ciudad destino = grafoCiudades.buscarCiudad(codDestino);
         if (destino == null) return Retorno.error4("Ciudad destino no existe");
 
         if (!grafoCiudades.existeConexion(origen, destino)) return Retorno.error5("No hay conexion");
 
-        Vuelo vuelo = origen.obtenerVuelo(codVuelo);
-        if (vuelo == null) return Retorno.error6("No existe el vuelo");
+        Conexion conexion = grafoCiudades.obtenerConexion(origen, destino);
+
+        if (!conexion.ExisteVuelo(codVuelo)) return Retorno.error6("No existe el vuelo");
+
+
+        Vuelo vuelo = conexion.obtenerVuelo(codVuelo);
 
         vuelo.setCombustible(combustible);
         vuelo.setMinutos(minutos);
@@ -485,11 +514,40 @@ public class ImplementacionSistema implements Sistema  {
         return Retorno.ok();
     }
 
-
+/*Descripción: Dada una ciudad de origen se debe retornar en el valorString los datos de las ciudades
+(ordenadas por código creciente) a las que se pueda llegar realizando hasta la cantidad de escalas indicada
+por parámetro. Esta operación no tiene restricciones de eficiencia.
+Retornos posibles
+OK
+Retorna en valorString los datos de las ciudades a las que se pueda llegar con
+hasta “cantidad” de escalas ordenadas de forma creciente por código.
+ERROR
+1. Si la cantidad es menor que cero.
+2. Si el código es vacío o null.
+3. Si la ciudad no está registrada en el sistema.
+NO_IMPLEMENTADA Cuando aún no se implementó.
+Formato de retorno del valor String:
+codigoCiudad1;nombreCiudad1|codigoCiudad2;nombreCiudad2
+Nota: Se debe cumplir que codigoCiudad1 es lexicográficamente menor a codigoCiudad2. */
 
     @Override
     public Retorno listadoCiudadesCantDeEscalas(String codigoCiudadOrigen, int cantidad) {
+
+        if (cantidad < 0) return Retorno.error1("La cantidad debe ser mayor o igual a cero");
+
+        if(codigoCiudadOrigen.isEmpty() || codigoCiudadOrigen == null )
+            return Retorno.error2(" codigoCiudadOrigen vacio o null");
+
+        //ciudad para buscar
+        Ciudad ciudadAux = new Ciudad( codigoCiudadOrigen, "");
+
+        if(grafoCiudades.buscarCiudad(codigoCiudadOrigen)== null)
+            return Retorno.error3( " La ciudad no esta registrada en el sistema");
+
+
+
         return Retorno.noImplementada();
+
     }
 
     @Override

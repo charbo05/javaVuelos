@@ -1,17 +1,32 @@
-// Cada conexión se representa como un par (ciudadOrigen -> ciudadDestino) con vuelos
-public class Conexion
- {
+package dominio;
+
+import tadsAux.ListaImpl;
+
+//Arista
+public class Conexion {
+
     private Ciudad origen;
     private Ciudad destino;
-    private List<Vuelo> vuelos;
+
+//    public void setVuelos(ListaImpl<Vuelo> vuelos) {
+//        this.vuelos = vuelos;
+//    }
+
+    private ListaImpl<Vuelo> vuelos;
+    private boolean existe;
 
     public Conexion(Ciudad origen, Ciudad destino) {
         this.origen = origen;
         this.destino = destino;
-        this.vuelos = new ArrayList<>();
+        this.vuelos = new ListaImpl<>();
     }
 
-    public List<Vuelo> getVuelos() {
+
+    public Conexion() {
+        this.vuelos = new ListaImpl<>();
+    }
+
+    public ListaImpl<Vuelo> getVuelos() {
         return vuelos;
     }
 
@@ -23,7 +38,47 @@ public class Conexion
         return destino;
     }
 
-    public boolean existeVuelo(String codigoVuelo) {
-        return vuelos.stream().anyMatch(v -> v.getCodigo().equals(codigoVuelo));
+
+    public boolean ExisteVuelo(String codigoVuelo) {
+        // Acá asumimos que vuelos ya no es null
+        return vuelos != null && vuelos.contieneElemento(new Vuelo(codigoVuelo, 0, 0, 0, null));
+    }
+
+
+    public boolean isExiste() {
+        return existe;
+    }
+
+    public void setExiste(boolean existe) {
+        this.existe = existe;
+        if (!existe) {
+            this.origen = null;
+            this.destino = null;
+            this.vuelos = null;
+
+        }
+    }
+
+    public void agregarVueloEnConexion(String codigoVuelo) {
+
+        if (this.ExisteVuelo(codigoVuelo)) {
+            System.out.println("Ya existe el vuelo con el codigo: " + codigoVuelo);
+            ;
+        } else {
+            Vuelo v = new Vuelo(codigoVuelo, 0, 0, 0, null);
+
+            vuelos.insertar(v);
+        }
+
+    }
+
+    public Vuelo obtenerVuelo(String codigoVuelo){
+        for(int i=0;i<vuelos.cantNodos();i++){
+            if(vuelos.obtener(i).getCodigoDeVuelo().equals(codigoVuelo)){
+                return vuelos.obtener(i);
+            }
+        }
+        return null;
     }
 }
+

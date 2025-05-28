@@ -65,7 +65,7 @@ public class Viajero implements Comparable<Viajero>
         this.categoria = categoria;
     }
 
-//---------------------------------------------
+    //---------------------------------------------
     @Override
     public int compareTo(Viajero o)
     {
@@ -100,15 +100,15 @@ public class Viajero implements Comparable<Viajero>
     1.914.689-5;Guillermo;guille@ort.edu.uy,35,Estándar
     */
 
-  /*  @Override
-    public String toString() {
-        return "Cedula: " + cedula +
-                ", Nombre: " + nombre +
-                ", Correo: " + correo +
-                ", Edad: " + edad +
-                ", Categoria: " + categoria; // Se muestra el texto de forma legible
-    }
-*/
+    /*  @Override
+      public String toString() {
+          return "Cedula: " + cedula +
+                  ", Nombre: " + nombre +
+                  ", Correo: " + correo +
+                  ", Edad: " + edad +
+                  ", Categoria: " + categoria; // Se muestra el texto de forma legible
+      }
+  */
     // en Viajero.java
     @Override
     public String toString() {

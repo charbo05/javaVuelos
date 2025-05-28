@@ -1,6 +1,5 @@
 package dominio;
 
-import tadsAux.ListaImpl;
 import java.util.Comparator;
 
 public class Ciudad implements Comparable<Ciudad> {
@@ -8,17 +7,11 @@ public class Ciudad implements Comparable<Ciudad> {
     private String codigo;
     private String nombre;
 
-    // Lista de vuelos salientes (por código de vuelo)
-    private ListaImpl<Vuelo> vuelosSalientes;
-
-    // Lista de conexiones directas con otras ciudades (para representar aristas del grafo)
-    private ListaImpl<Ciudad> conexiones;
 
     public Ciudad(String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
-        this.vuelosSalientes = new ListaImpl<>();
-        this.conexiones = new ListaImpl<>();
+
     }
 
     // Getters y Setters
@@ -38,36 +31,19 @@ public class Ciudad implements Comparable<Ciudad> {
         this.codigo = codigo;
     }
 
-    public ListaImpl<Vuelo> getVuelos() {
-        return vuelosSalientes;
-    }
 
-    public ListaImpl<Ciudad> getConexiones() {
-        return conexiones;
-    }
+//
+//    public Vuelo obtenerVuelo(String codigoVuelo) {
+//        for (int i = 0; i < vuelosSalientes.cantNodos(); i++) {
+//            Vuelo v = vuelosSalientes.obtener(i);
+//            if (v.getCodigoDeVuelo().equals(codigoVuelo)) {
+//                return v;
+//            }
+//        }
+//        return null;
+//    }
 
-    public void agregarVuelo(Vuelo vuelo) {
-        vuelosSalientes.insertar(vuelo);
-    }
 
-    public Vuelo obtenerVuelo(String codigoVuelo) {
-        for (int i = 0; i < vuelosSalientes.cantNodos(); i++) {
-            Vuelo v = vuelosSalientes.obtener(i);
-            if (v.getCodigoDeVuelo().equals(codigoVuelo)) {
-                return v;
-            }
-        }
-        return null;
-    }
-
-    public boolean tieneConexionCon(Ciudad destino) {
-        for (int i = 0; i < conexiones.cantNodos(); i++) {
-            if (conexiones.obtener(i).equals(destino)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     public String toString() {

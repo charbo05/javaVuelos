@@ -125,37 +125,45 @@ public class GrafoCiudades {
 
         }
 
+public ListaImpl<Ciudad> obtenerCiudadesAlcanzables(String codigoCiudadOrigen, int cantidadDeEscalas) {
+        int posOrigen = obtenerPosPorCodigo(codigoCiudadOrigen);
+        if (posOrigen == -1)
+            return new ListaImpl<>();
 
-public List<Ciudad> obtenerCiudadesAlcanzables(String codigoCiudadOrigen, int cantidadDeEscalas) {
-    int posOrigen = obtenerPosPorCodigo(codigoCiudadOrigen);
-    boolean[] visitado = new boolean[maxCiudades];
-    List<Ciudad> alcanzables = new ArrayList<>();
+        boolean[] visitado = new boolean[maxCiudades];
+        ListaImpl<Ciudad> alcanzables = new ListaImpl<>();
 
-    ICola<NodoEscala> cola = new Cola<>();
-    cola.encolar(new NodoEscala(posOrigen, 0));
-    visitado[posOrigen] = true;
+        ICola<NodoEscala> cola = new Cola<>();
+        cola.encolar(new NodoEscala(posOrigen, 0));
 
-    while (!cola.estaVacia()) {
-        NodoEscala actual = (NodoEscala) cola.desencolar();
-        int pos = actual.posCiudad;
-        int escalas = actual.escalas;
 
-        if (escalas > 0) {
-            alcanzables.add(ciudades[pos]);
-        }
+        while (!cola.estaVacia()) {
+            NodoEscala actual = cola.desencolar();
+            int pos = actual.posCiudad;
+            int escalas = actual.escalas;
 
-        if (escalas < cantidadDeEscalas) {
-            for (int i = 0; i < maxCiudades; i++) {
-                if (conexiones[pos][i].isExiste() && !visitado[i]) {
-                    visitado[i] = true;
-                    cola.encolar(new NodoEscala(i, escalas + 1));
+
+            if (!visitado[pos]) {
+                visitado[pos] = true; //marco como visitada a la ciudad origen cuando estoy dentro del bucle
+
+                if (escalas >= 0) {
+                    alcanzables.insertar(ciudades[pos]);
+                }
+
+                if (escalas < cantidadDeEscalas) {
+                    for (int i = 0; i < maxCiudades; i++) {     //necesito saber si tiene tambien algun vuelo
+                        if (conexiones[pos][i].isExiste() && !visitado[i] && conexiones[pos][i].getVuelos().largo() > 0) {
+
+
+                            cola.encolar(new NodoEscala(i, escalas + 1));
+                        }
+                    }
                 }
             }
         }
-    }
 
-    return alcanzables;
-}
+        return alcanzables;
+    }
 
 
 //--------------------------------

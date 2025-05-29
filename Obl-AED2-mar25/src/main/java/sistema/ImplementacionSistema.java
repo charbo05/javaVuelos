@@ -4,6 +4,10 @@ import tadsAux.ABB;
 import tadsAux.GrafoCiudades;
 import tadsAux.ListaImpl;
 import tadsAux.ResultadoBusqueda;
+
+import java.util.Comparator;
+import java.util.List;
+
 import dominio.Ciudad;
 import dominio.Viajero;
 import dominio.Vuelo;
@@ -532,23 +536,36 @@ Nota: Se debe cumplir que codigoCiudad1 es lexicográficamente menor a codigoCiu
 
     @Override
     public Retorno listadoCiudadesCantDeEscalas(String codigoCiudadOrigen, int cantidad) {
+        if (cantidad < 0)
+            return Retorno.error1("La cantidad debe ser mayor o igual a cero");
 
-        if (cantidad < 0) return Retorno.error1("La cantidad debe ser mayor o igual a cero");
+        if (codigoCiudadOrigen == null || codigoCiudadOrigen.trim().isEmpty())
+            return Retorno.error2("Código ciudad origen vacío o null");
 
-        if(codigoCiudadOrigen.isEmpty() || codigoCiudadOrigen == null )
-            return Retorno.error2(" codigoCiudadOrigen vacio o null");
+        Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
+        if (origen == null)
+            return Retorno.error3("La ciudad no está registrada en el sistema");
 
-        //ciudad para buscar
-        Ciudad ciudadAux = new Ciudad( codigoCiudadOrigen, "");
+        // Caso especial: 0 escalas → devolver solo la ciudad origen
+        if (cantidad == 0) {
+            return Retorno.ok(origen.getCodigo() + ";" + origen.getNombre());
+        }
 
-        if(grafoCiudades.buscarCiudad(codigoCiudadOrigen)== null)
-            return Retorno.error3( " La ciudad no esta registrada en el sistema");
+        ListaImpl<Ciudad> alcanzables = grafoCiudades.obtenerCiudadesAlcanzables(codigoCiudadOrigen, cantidad);
 
+        // Ordenar por código
+        alcanzables.ordenarPor(Comparator.comparing(Ciudad::getCodigo));
 
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < alcanzables.largo(); i++) {
+            Ciudad c = alcanzables.obtener(i);
+            if (sb.length() > 0) sb.append("|");
+            sb.append(c.getCodigo()).append(";").append(c.getNombre());
+        }
 
-        return Retorno.noImplementada();
-
+        return Retorno.ok(sb.toString());
     }
+
 
     @Override
     public Retorno viajeCostoMinimoMinutos(String codigoCiudadOrigen, String codigoCiudadDestino, TipoVueloPermitido tipoVueloPermitido) {

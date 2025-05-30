@@ -535,36 +535,36 @@ codigoCiudad1;nombreCiudad1|codigoCiudad2;nombreCiudad2
 Nota: Se debe cumplir que codigoCiudad1 es lexicográficamente menor a codigoCiudad2. */
 
     @Override
-    public Retorno listadoCiudadesCantDeEscalas(String codigoCiudadOrigen, int cantidad) {
-        if (cantidad < 0)
-            return Retorno.error1("La cantidad debe ser mayor o igual a cero");
+ public Retorno listadoCiudadesCantDeEscalas(String codigoCiudadOrigen, int cantidad) {
+     if (cantidad < 0)
+         return Retorno.error1("La cantidad debe ser mayor o igual a cero");
 
-        if (codigoCiudadOrigen == null || codigoCiudadOrigen.trim().isEmpty())
-            return Retorno.error2("Código ciudad origen vacío o null");
+     if (codigoCiudadOrigen == null || codigoCiudadOrigen.trim().isEmpty())
+         return Retorno.error2("Código ciudad origen vacío o null");
 
-        Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
-        if (origen == null)
-            return Retorno.error3("La ciudad no está registrada en el sistema");
+     Ciudad origen = grafoCiudades.buscarCiudad(codigoCiudadOrigen);
+     if (origen == null)
+         return Retorno.error3("La ciudad no está registrada en el sistema");
 
-        // Caso especial: 0 escalas → devolver solo la ciudad origen
-        if (cantidad == 0) {
-            return Retorno.ok(origen.getCodigo() + ";" + origen.getNombre());
-        }
+     // Caso especial: 0 escalas → devolver solo la ciudad origen
+     if (cantidad == 0) {
+         return Retorno.ok(origen.getCodigo() + ";" + origen.getNombre());
+     }
 
-        ListaImpl<Ciudad> alcanzables = grafoCiudades.obtenerCiudadesAlcanzables(codigoCiudadOrigen, cantidad);
+     ListaImpl<Ciudad> alcanzables = grafoCiudades.obtenerCiudadesAlcanzables(codigoCiudadOrigen, cantidad);
 
-        // Ordenar por código
-        alcanzables.ordenarPor(Comparator.comparing(Ciudad::getCodigo));
+     // Ordenar por código
+     alcanzables.ordenarPor(Comparator.comparing(Ciudad::getCodigo));
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < alcanzables.largo(); i++) {
-            Ciudad c = alcanzables.obtener(i);
-            if (sb.length() > 0) sb.append("|");
-            sb.append(c.getCodigo()).append(";").append(c.getNombre());
-        }
+     StringBuilder sb = new StringBuilder();
+     for (int i = 0; i < alcanzables.largo(); i++) {
+         Ciudad c = alcanzables.obtener(i);
+         if (sb.length() > 0) sb.append("|");
+         sb.append(c.getCodigo()).append(";").append(c.getNombre());
+     }
 
-        return Retorno.ok(sb.toString());
-    }
+     return Retorno.ok(sb.toString());
+ }
 
 
     @Override
